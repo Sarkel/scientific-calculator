@@ -3,19 +3,21 @@ package pl.edu.wszib.kubalski.interpreter.parser;
 import lombok.NonNull;
 import pl.edu.wszib.kubalski.interpreter.expression.Expression;
 import pl.edu.wszib.kubalski.interpreter.expression.ExpressionFactory;
+import pl.edu.wszib.kubalski.interpreter.expression.ExpressionFactoryHelper;
 
 import java.util.*;
 
 public class BaseTokenParser extends TokenParser {
     private int position = 0;
 
-    private final ExpressionFactory expressionFactory = new ExpressionFactory();
-
-
-
-    public BaseTokenParser(@NonNull List<String> tokens) {
-        super(tokens);
+    public BaseTokenParser(
+            @NonNull List<String> tokens,
+            @NonNull ExpressionFactoryHelper expressionFactoryHelper,
+            @NonNull ExpressionFactory expressionFactory
+    ) {
+        super(tokens, expressionFactoryHelper, expressionFactory);
     }
+
 
     public Expression parse() {
         return parseExpression();
@@ -24,7 +26,7 @@ public class BaseTokenParser extends TokenParser {
     // Parse an expression (handles lowest-precedence operators)
     private Expression parseExpression() {
         Expression left = parseTerm();
-        while (match(expressionFactory.getLowPriorityExpressions())) {
+        while (match(expressionFactoryHelper.getLowPriorityExpressions())) {
             String operator = previous();
             Expression right = parseTerm();
 
@@ -36,7 +38,7 @@ public class BaseTokenParser extends TokenParser {
     // Parse a term (handles higher-precedence operators: * and /)
     private Expression parseTerm() {
         Expression left = parseFactor();
-        while (match(expressionFactory.getHighPriorityExpressions())) {
+        while (match(expressionFactoryHelper.getHighPriorityExpressions())) {
             String operator = previous();
             Expression right = parseFactor();
 
@@ -48,7 +50,7 @@ public class BaseTokenParser extends TokenParser {
     // Parse a factor (handles parentheses, numbers, and functions)
     private Expression parseFactor() {
         // Check for unary operators '+' and '-'
-        if (match(expressionFactory.getUnaryExpressions())) {
+        if (match(expressionFactoryHelper.getUnaryExpressions())) {
             String operator = previous();
             Expression expression = parseFactor();
             return expressionFactory.createExpression(operator, expression, null);
@@ -59,7 +61,7 @@ public class BaseTokenParser extends TokenParser {
             expect(")"); // Ensure closing parenthesis
             return expression;
         }
-        if (match(expressionFactory.getFunctionalExpressions())) {
+        if (match(expressionFactoryHelper.getFunctionalExpressions())) {
             String function = previous();
             expect("(");
             Expression argument = parseExpression();
@@ -67,7 +69,7 @@ public class BaseTokenParser extends TokenParser {
 
             return expressionFactory.createExpression(function, argument, null);
         }
-        if (match(expressionFactory.getConstantExpressions()) || matchNumber()) {
+        if (match(expressionFactoryHelper.getConstantExpressions()) || matchNumber()) {
             String terminalValue = previous();
 
             return expressionFactory.createExpression(terminalValue, null, null);

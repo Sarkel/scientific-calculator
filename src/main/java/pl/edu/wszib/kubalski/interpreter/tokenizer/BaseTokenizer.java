@@ -1,25 +1,23 @@
 package pl.edu.wszib.kubalski.interpreter.tokenizer;
 
 import lombok.NonNull;
-import pl.edu.wszib.kubalski.interpreter.expression.ExpressionFactory;
+import pl.edu.wszib.kubalski.interpreter.expression.ExpressionFactoryHelper;
 
 import java.util.*;
 import java.util.regex.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-
 public class BaseTokenizer implements Tokenizer {
     private static final String NUMBER_REGEX = "\\d+(\\.\\d+)?";  // Matches integers and decimals
 
     private final Pattern tokenPattern;
 
-
     @NonNull
-    private final ExpressionFactory expressionFactory;
+    private final ExpressionFactoryHelper expressionFactoryHelper;
 
-    public BaseTokenizer(@NonNull ExpressionFactory expressionFactory) {
-        this.expressionFactory = expressionFactory;
+    public BaseTokenizer(@NonNull ExpressionFactoryHelper expressionFactoryHelper) {
+        this.expressionFactoryHelper = expressionFactoryHelper;
 
         tokenPattern = buildPattern();
     }
@@ -36,8 +34,8 @@ public class BaseTokenizer implements Tokenizer {
 
     private String buildOperatorRegex() {
         String operators = Stream.of(
-                        expressionFactory.getHighPriorityExpressions(),
-                        expressionFactory.getLowPriorityExpressions()
+                        expressionFactoryHelper.getHighPriorityExpressions(),
+                        expressionFactoryHelper.getLowPriorityExpressions()
                 )
                 .flatMap(Arrays::stream)
                 .map(Pattern::quote)
@@ -48,8 +46,8 @@ public class BaseTokenizer implements Tokenizer {
 
     private String buildFunctionRegex() {
         return Stream.of(
-                        expressionFactory.getFunctionalExpressions(),
-                        expressionFactory.getConstantExpressions()
+                        expressionFactoryHelper.getFunctionalExpressions(),
+                        expressionFactoryHelper.getConstantExpressions()
                 )
                 .flatMap(Arrays::stream)
                 .map(Pattern::quote)
