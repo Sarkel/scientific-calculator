@@ -3,6 +3,7 @@ package pl.edu.wszib.kubalski.interpreter.parser;
 import lombok.NonNull;
 import pl.edu.wszib.kubalski.interpreter.operator.Expression;
 import pl.edu.wszib.kubalski.interpreter.operator.ExpressionFactory;
+import pl.edu.wszib.kubalski.interpreter.operator.ExpressionType;
 
 import java.util.*;
 
@@ -47,18 +48,27 @@ public class BaseTokenParser extends TokenParser {
 
     // Parse a factor (handles parentheses, numbers, and functions)
     private Expression parseFactor() {
+        // Check for unary operators '+' and '-'
+        if (match(expressionFactory.getUnaryExpressions())) {
+            String operator = previous();
+            Expression expression = parseFactor();
+            return expressionFactory.createExpression(operator, expression, null);
+        }
+
         if (match("(")) {
             Expression expression = parseExpression();
             expect(")"); // Ensure closing parenthesis
             return expression;
-        } else if (match(expressionFactory.getFunctionalExpressions())) {
+        }
+        if (match(expressionFactory.getFunctionalExpressions())) {
             String function = previous();
             expect("(");
             Expression argument = parseExpression();
             expect(")");
 
             return expressionFactory.createExpression(function, argument, null);
-        } else if (match(expressionFactory.getConstantExpressions()) || matchNumber()) {
+        }
+        if (match(expressionFactory.getConstantExpressions()) || matchNumber()) {
             String terminalValue = previous();
 
             return expressionFactory.createExpression(terminalValue, null, null);

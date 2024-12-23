@@ -8,6 +8,11 @@ import java.util.Objects;
 import java.util.Set;
 
 public class ExpressionFactory {
+    private final Map<ExpressionType, OneArgumentExpressionFactory> unaryExpressions = Map.ofEntries(
+            Map.entry(ExpressionType.NEGATE, NegationExpression::new),
+            Map.entry(ExpressionType.POSITIVE, PositiveExpression::new)
+    );
+
     private final Map<ExpressionType, OneArgumentExpressionFactory> functionalExpressions = Map.ofEntries(
             Map.entry(ExpressionType.COS, CosExpression::new),
             Map.entry(ExpressionType.LOG, LogExpression::new),
@@ -35,10 +40,13 @@ public class ExpressionFactory {
         try {
             ExpressionType expressionType = Arrays.stream(ExpressionType.values())
                     .filter(et -> Objects.equals(et.getOperator(), operator))
+                    .filter(et -> et.getNumberOfArguments() == (left == null ? 0 : 1) + (right == null ? 0 : 1))
                     .findFirst()
                     .orElseThrow(() -> new IllegalArgumentException("Invalid operator or value: " + operator));
 
-
+            if (unaryExpressions.containsKey(expressionType)) {
+                return unaryExpressions.get(expressionType).createExpression(left);
+            }
             if (functionalExpressions.containsKey(expressionType)) {
                 return functionalExpressions.get(expressionType).createExpression(left);
             }
@@ -72,6 +80,10 @@ public class ExpressionFactory {
 
     public String[] getConstantExpressions() {
         return getExpressionTypes(constantExpressions.keySet());
+    }
+
+    public String[] getUnaryExpressions() {
+        return getExpressionTypes(unaryExpressions.keySet());
     }
 
     private String[] getExpressionTypes(Set<ExpressionType> expressionTypes) {
