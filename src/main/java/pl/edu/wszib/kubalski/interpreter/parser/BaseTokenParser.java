@@ -1,9 +1,8 @@
 package pl.edu.wszib.kubalski.interpreter.parser;
 
 import lombok.NonNull;
-import pl.edu.wszib.kubalski.interpreter.operator.Expression;
-import pl.edu.wszib.kubalski.interpreter.operator.ExpressionFactory;
-import pl.edu.wszib.kubalski.interpreter.operator.ExpressionType;
+import pl.edu.wszib.kubalski.interpreter.expression.Expression;
+import pl.edu.wszib.kubalski.interpreter.expression.ExpressionFactory;
 
 import java.util.*;
 

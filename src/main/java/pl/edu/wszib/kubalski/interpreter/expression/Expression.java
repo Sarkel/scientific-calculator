@@ -1,4 +1,4 @@
-package pl.edu.wszib.kubalski.interpreter.operator;
+package pl.edu.wszib.kubalski.interpreter.expression;
 
 import pl.edu.wszib.kubalski.interpreter.Context;
 

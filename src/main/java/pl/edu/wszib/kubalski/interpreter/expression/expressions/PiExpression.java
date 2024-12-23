@@ -1,7 +1,7 @@
-package pl.edu.wszib.kubalski.interpreter.operator.expressions;
+package pl.edu.wszib.kubalski.interpreter.expression.expressions;
 
 import pl.edu.wszib.kubalski.interpreter.Context;
-import pl.edu.wszib.kubalski.interpreter.operator.Expression;
+import pl.edu.wszib.kubalski.interpreter.expression.Expression;
 
 public class PiExpression implements Expression {
     @Override

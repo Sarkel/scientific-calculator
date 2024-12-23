@@ -2,7 +2,7 @@ package pl.edu.wszib.kubalski;
 
 import pl.edu.wszib.kubalski.interpreter.Context;
 import pl.edu.wszib.kubalski.interpreter.Interpreter;
-import pl.edu.wszib.kubalski.interpreter.operator.ExpressionFactory;
+import pl.edu.wszib.kubalski.interpreter.expression.ExpressionFactory;
 import pl.edu.wszib.kubalski.interpreter.parser.BaseTokenParser;
 import pl.edu.wszib.kubalski.interpreter.parser.TokenParserFactory;
 import pl.edu.wszib.kubalski.interpreter.tokenizer.BaseTokenizer;

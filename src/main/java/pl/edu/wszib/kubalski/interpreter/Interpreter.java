@@ -2,7 +2,7 @@ package pl.edu.wszib.kubalski.interpreter;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import pl.edu.wszib.kubalski.interpreter.operator.Expression;
+import pl.edu.wszib.kubalski.interpreter.expression.Expression;
 import pl.edu.wszib.kubalski.interpreter.parser.TokenParser;
 import pl.edu.wszib.kubalski.interpreter.parser.TokenParserFactory;
 import pl.edu.wszib.kubalski.interpreter.tokenizer.Tokenizer;
