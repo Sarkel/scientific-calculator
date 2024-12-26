@@ -59,12 +59,11 @@ public class BaseTokenizer implements Tokenizer {
 
     @Override
     public List<String> tokenize(String expression) {
-        List<String> tokens = new ArrayList<>();
-        Matcher matcher = tokenPattern.matcher(expression);
-        while (matcher.find()) {
-            tokens.add(matcher.group());
-        }
-        return tokens;
+        return tokenPattern.matcher(expression.toLowerCase())
+                .results()
+                .map(MatchResult::group)
+                .filter(token -> !token.isBlank())
+                .toList();
     }
 
     private String buildOperatorRegex() {
