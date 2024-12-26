@@ -1,7 +1,8 @@
-package pl.edu.wszib.kubalski.interpreter.expression;
+package pl.edu.wszib.kubalski.interpreter.expression.factory;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import pl.edu.wszib.kubalski.interpreter.expression.ExpressionType;
 
 import java.util.Set;
 

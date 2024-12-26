@@ -1,6 +1,8 @@
-package pl.edu.wszib.kubalski.interpreter.expression;
+package pl.edu.wszib.kubalski.interpreter.expression.factory;
 
 import lombok.Getter;
+import pl.edu.wszib.kubalski.interpreter.expression.Expression;
+import pl.edu.wszib.kubalski.interpreter.expression.ExpressionType;
 import pl.edu.wszib.kubalski.interpreter.expression.expressions.*;
 
 import java.util.Map;

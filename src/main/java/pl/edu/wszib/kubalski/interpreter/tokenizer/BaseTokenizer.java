@@ -1,7 +1,7 @@
 package pl.edu.wszib.kubalski.interpreter.tokenizer;
 
 import lombok.NonNull;
-import pl.edu.wszib.kubalski.interpreter.expression.ExpressionFactoryHelper;
+import pl.edu.wszib.kubalski.interpreter.expression.factory.ExpressionFactoryHelper;
 
 import java.util.*;
 import java.util.regex.*;

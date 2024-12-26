@@ -2,8 +2,8 @@ package pl.edu.wszib.kubalski.interpreter.parser;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import pl.edu.wszib.kubalski.interpreter.expression.ExpressionFactory;
-import pl.edu.wszib.kubalski.interpreter.expression.ExpressionFactoryHelper;
+import pl.edu.wszib.kubalski.interpreter.expression.factory.ExpressionFactory;
+import pl.edu.wszib.kubalski.interpreter.expression.factory.ExpressionFactoryHelper;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;

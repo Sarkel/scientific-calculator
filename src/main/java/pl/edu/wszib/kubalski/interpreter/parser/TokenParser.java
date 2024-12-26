@@ -3,34 +3,52 @@ package pl.edu.wszib.kubalski.interpreter.parser;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import pl.edu.wszib.kubalski.interpreter.expression.Expression;
-import pl.edu.wszib.kubalski.interpreter.expression.ExpressionFactory;
-import pl.edu.wszib.kubalski.interpreter.expression.ExpressionFactoryHelper;
+import pl.edu.wszib.kubalski.interpreter.expression.factory.ExpressionFactory;
+import pl.edu.wszib.kubalski.interpreter.expression.factory.ExpressionFactoryHelper;
 
 import java.util.List;
 
 
+
 /**
- * The TokenParser class is an abstract representation of a parser that interprets and evaluates a
- * list of tokens using a defined grammar and constructs a corresponding expression tree.
+ * The TokenParser class is responsible for parsing a list of tokens and constructing
+ * an abstract syntax tree (AST) representing mathematical or logical expressions.
+ * It supports parsing expressions with various precedence levels and different
+ * types of operators such as unary, binary, and functional.
  *
- * This class handles parsing of expressions, terms, and factors using specified precedence levels
- * for operators and evaluates the tokens based on the provided ExpressionFactory and
- * ExpressionFactoryHelper. It supports:
+ * The class uses an ExpressionFactory and ExpressionFactoryHelper to assist in
+ * creating and managing expressions based on tokenized input.
  *
- * - Low-priority operations (e.g., addition, subtraction).
- * - High-priority operations (e.g., multiplication, division).
- * - Unary operations (e.g., negation).
- * - Functional expressions (e.g., functions like sin, cos).
- * - Parenthetical grouping for expressions.
+ * Responsibilities:
+ * - Parsing tokens into structured expressions.
+ * - Managing operator precedence to correctly build the abstract syntax tree.
+ * - Validating token syntax and structure during parsing.
  *
- * Designed to work with an `ExpressionFactory` for creating expressions and
- * `ExpressionFactoryHelper` to assist in identifying operator types and precedence.
+ * Design:
+ * - Implements recursive-descent parsing to support precedence and associativity.
+ * - Divides parsing into multiple levels, e.g., expressions, terms, and factors, to
+ *   handle different operator precedences.
+ * - Uses utility methods to match, check, and advance tokens during parsing.
+ * - Encapsulates token handling and parsing logic within private helper methods.
  *
- * Utility methods are provided for token manipulation, including matching tokens, retrieving current
- * and previous tokens, and advancing the token pointer.
+ * Methods:
+ * - `parse`: Entry point to parse the tokens and return the resulting Expression.
+ * - `parseExpression`: Handles parsing low-priority operators (e.g., addition and subtraction).
+ * - `parseTerm`: Handles parsing high-priority operators (e.g., multiplication and division).
+ * - `parseFactor`: Handles parsing of individual operands, parentheses, and unary operations.
+ * - Utility methods (`match`, `expect`, `advance`, etc.) for token manipulation and validation.
+ *
+ * Dependencies:
+ * - ExpressionFactory: Responsible for creating concrete expression instances.
+ * - ExpressionFactoryHelper: Provides sets of operators categorized by precedence or functionality.
+ * - Expression: Represents individual nodes in the syntax tree.
+ *
+ * Usage Considerations:
+ * - Throws IllegalArgumentException if the token stream contains invalid syntax or unsupported tokens.
+ * - Relies on the token list's correct initialization and expected formatting.
  */
 @RequiredArgsConstructor
-public abstract class TokenParser {
+public class TokenParser {
     @NonNull
     private final List<String> tokens;
 

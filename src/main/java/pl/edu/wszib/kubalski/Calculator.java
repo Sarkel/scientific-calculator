@@ -2,9 +2,9 @@ package pl.edu.wszib.kubalski;
 
 import pl.edu.wszib.kubalski.interpreter.Context;
 import pl.edu.wszib.kubalski.interpreter.Interpreter;
-import pl.edu.wszib.kubalski.interpreter.expression.ExpressionFactory;
-import pl.edu.wszib.kubalski.interpreter.expression.ExpressionFactoryHelper;
-import pl.edu.wszib.kubalski.interpreter.expression.ExpressionFactoryStore;
+import pl.edu.wszib.kubalski.interpreter.expression.factory.ExpressionFactory;
+import pl.edu.wszib.kubalski.interpreter.expression.factory.ExpressionFactoryHelper;
+import pl.edu.wszib.kubalski.interpreter.expression.factory.ExpressionFactoryStore;
 import pl.edu.wszib.kubalski.interpreter.parser.TokenParser;
 import pl.edu.wszib.kubalski.interpreter.parser.TokenParserFactory;
 import pl.edu.wszib.kubalski.interpreter.tokenizer.BaseTokenizer;
