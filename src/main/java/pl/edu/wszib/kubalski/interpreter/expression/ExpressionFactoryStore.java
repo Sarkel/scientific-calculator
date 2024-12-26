@@ -74,7 +74,8 @@ public class ExpressionFactoryStore {
     );
 
     private final Map<ExpressionType, ConstantExpressionFactory> constantExpressions = Map.ofEntries(
-            Map.entry(ExpressionType.PI, PiExpression::new)
+            Map.entry(ExpressionType.PI, PiConstantExpression::new),
+            Map.entry(ExpressionType.E, EConstantExpression::new)
     );
 
     interface TwoArgumentExpressionFactory {
