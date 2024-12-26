@@ -61,7 +61,8 @@ public class ExpressionFactoryStore {
             Map.entry(ExpressionType.LOG, LogExpression::new),
             Map.entry(ExpressionType.SIN, SinExpression::new),
             Map.entry(ExpressionType.SQRT, SqrtExpression::new),
-            Map.entry(ExpressionType.TAN, TanExpression::new)
+            Map.entry(ExpressionType.TAN, TanExpression::new),
+            Map.entry(ExpressionType.CTAN, CtanExpression::new)
     );
 
     private final Map<ExpressionType, TwoArgumentExpressionFactory> lowPriorityExpressions = Map.ofEntries(

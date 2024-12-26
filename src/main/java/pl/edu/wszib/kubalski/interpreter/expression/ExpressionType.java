@@ -27,7 +27,7 @@ public enum ExpressionType {
     LOG("log", "Natural logarithm", 1, ExpressionGroup.ARITHMETIC),
     MULTIPLY("*", "Multiplication", 2, ExpressionGroup.ARITHMETIC),
     NUMBER("", "Any real number", 0, ExpressionGroup.UNITARY, false),
-    PI("pi", "Constant pi", 0, ExpressionGroup.CONSTANT),
+    PI("pi", "pi", 0, ExpressionGroup.CONSTANT),
     POW("^", "Exponentiation", 2, ExpressionGroup.ARITHMETIC),
     SIN("sin", "Sine", 1, ExpressionGroup.TRIGONOMETRY),
     SQRT("sqrt", "Elementation", 1, ExpressionGroup.ARITHMETIC),
@@ -45,7 +45,8 @@ public enum ExpressionType {
             return "x";
         }
     },
-    E("e", "Constant e", 0, ExpressionGroup.CONSTANT);
+    E("e", "e", 0, ExpressionGroup.CONSTANT),
+    CTAN("ctan", "Cotangent", 1, ExpressionGroup.TRIGONOMETRY);
 
     private final String operator;
 
