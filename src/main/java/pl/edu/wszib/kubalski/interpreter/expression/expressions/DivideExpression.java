@@ -15,6 +15,10 @@ public class DivideExpression implements Expression {
 
     @Override
     public Double interpret(Context context) {
-        return right.interpret(context) / left.interpret(context);
+        Double leftValue = left.interpret(context);
+        if (leftValue == 0) {
+            throw new ArithmeticException("Division by zero");
+        }
+        return right.interpret(context) / leftValue;
     }
 }

@@ -13,6 +13,12 @@ public class SqrtExpression implements Expression {
 
     @Override
     public Double interpret(Context context) {
-        return Math.sqrt(expression.interpret(context));
+        Double value = expression.interpret(context);
+
+        if (value < 0) {
+            throw new ArithmeticException("Argument cannot be negative");
+        }
+
+        return Math.sqrt(value);
     }
 }

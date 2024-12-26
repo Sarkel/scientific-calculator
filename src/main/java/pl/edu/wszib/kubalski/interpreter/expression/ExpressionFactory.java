@@ -6,7 +6,6 @@ import pl.edu.wszib.kubalski.interpreter.expression.expressions.*;
 
 import java.util.Arrays;
 import java.util.Objects;
-import java.util.Set;
 
 @RequiredArgsConstructor
 public class ExpressionFactory {

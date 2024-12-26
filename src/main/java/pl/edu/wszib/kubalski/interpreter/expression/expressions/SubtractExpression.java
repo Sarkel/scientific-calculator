@@ -12,6 +12,6 @@ public class SubtractExpression implements Expression {
 
     @Override
     public Double interpret(Context context) {
-        return left.interpret(context) + right.interpret(context);
+        return left.interpret(context) - right.interpret(context);
     }
 }
