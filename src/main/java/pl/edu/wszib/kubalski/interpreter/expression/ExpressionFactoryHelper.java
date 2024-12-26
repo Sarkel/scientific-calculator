@@ -5,6 +5,17 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.Set;
 
+/**
+ * Helper class for retrieving types of expressions available in the {@link ExpressionFactoryStore}.
+ * This class provides methods for fetching expressions classified into functional, low-priority,
+ * high-priority, constant, and unary categories.
+ *
+ * The methods return arrays of string representations of operators associated with specific
+ * expression types stored in the {@link ExpressionFactoryStore}.
+ *
+ * The class is constructed with an instance of {@link ExpressionFactoryStore}, which acts
+ * as the source of expression type mappings.
+ */
 @RequiredArgsConstructor
 public class ExpressionFactoryHelper {
     @NonNull

@@ -5,6 +5,48 @@ import pl.edu.wszib.kubalski.interpreter.expression.expressions.*;
 
 import java.util.Map;
 
+
+/**
+ * The ExpressionFactoryStore class is responsible for providing and managing various
+ * factories for creating mathematical expression objects compliant with the Interpreter design pattern.
+ * These factories allow the construction of unary, binary, and constant expression instances
+ * based on the specified ExpressionType.
+ *
+ * This class serves as a registry for expression factories categorized by the type
+ * and priority of the operation. It organizes the factories into maps for efficient
+ * lookup and instantiation of expression objects.
+ *
+ * Features:
+ * - Unary Expression Factories: Supports the creation of expressions requiring a single operand.
+ *   Examples include negation and trigonometric operations such as cosine and sine.
+ * - Functional Expression Factories: Enables expressions based on mathematical functions like logarithm and square root.
+ * - Low Priority Expression Factories: Handles binary operations with lower precedence, such as addition and subtraction.
+ * - High Priority Expression Factories: Handles binary operations with higher precedence, such as multiplication and division.
+ * - Constant Expression Factories: Supports constants like π (Pi) and e.
+ *
+ * Responsibilities:
+ * - Acts as a centralized point for instantiating various types of mathematical expressions.
+ * - Provides a structured way to associate specific ExpressionType values with their respective
+ *   expression factories.
+ *
+ * Design:
+ * - The ExpressionFactoryStore uses the Map.ofEntries construct to initialize immutable maps for each category of factories.
+ * - Three types of factories are defined:
+ *   - OneArgumentExpressionFactory: Creates unary expressions requiring a single operand.
+ *   - TwoArgumentExpressionFactory: Creates binary expressions requiring two operands.
+ *   - ConstantExpressionFactory: Creates constant expressions with no operands.
+ *
+ * Usage:
+ * - The ExpressionFactoryStore is utilized to efficiently retrieve the appropriate factory
+ *   based on an ExpressionType, and then create the required Expression instance.
+ *
+ * Components:
+ * - unaryExpressions: Map containing factories for unary mathematical operations.
+ * - functionalExpressions: Map for creating functional unary expressions like cosine or square root.
+ * - lowPriorityExpressions: Map for creating binary operations with low precedence (e.g., addition).
+ * - highPriorityExpressions: Map for creating binary operations with high precedence (e.g., multiplication).
+ * - constantExpressions: Map for creating constant expressions.
+ */
 @Getter
 public class ExpressionFactoryStore {
     private final Map<ExpressionType, OneArgumentExpressionFactory> unaryExpressions = Map.ofEntries(

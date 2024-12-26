@@ -5,6 +5,26 @@ import lombok.RequiredArgsConstructor;
 import pl.edu.wszib.kubalski.interpreter.Context;
 import pl.edu.wszib.kubalski.interpreter.expression.Expression;
 
+/**
+ * Represents a cosine mathematical expression in the context of the Interpreter design pattern.
+ *
+ * This class is a unary expression implementation, where the cosine operation (cos) is applied
+ * to the result of another encapsulated sub-expression. It evaluates the cosine of the interpreted
+ * value derived from the provided sub-expression and the given context.
+ *
+ * Responsibilities:
+ * - Evaluates the cosine operation on the result of the nested expression's interpretation.
+ *
+ * Design:
+ * - Utilizes a single sub-expression, provided during construction, to compute the result.
+ * - Leverages the `Math.cos` function to calculate the cosine of the interpreted value.
+ * - The sub-expression must implement the `Expression` interface, enabling composition of
+ *   this expression with other expressions to form complex mathematical constructs.
+ *
+ * Methods:
+ * - `interpret(Context context)`: Invokes the interpretation of the encapsulated
+ *   sub-expression, applies the cosine operation, and returns the computed result.
+ */
 @RequiredArgsConstructor
 public class CosExpression implements Expression {
     @NonNull

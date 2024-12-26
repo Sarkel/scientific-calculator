@@ -5,7 +5,7 @@ import pl.edu.wszib.kubalski.interpreter.Context;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class PiExpressionTest {
+class PiConstantExpressionTest {
 
     /**
      * Test class for PiExpression, which represents a constant expression
@@ -16,7 +16,7 @@ class PiExpressionTest {
     @Test
     void shouldReturnMathPIWhenInterpretIsCalled() {
         // Arrange
-        PiExpression piExpression = new PiExpression();
+        PiConstantExpression piExpression = new PiConstantExpression();
         Context context = Context.builder().build();
 
         // Act
