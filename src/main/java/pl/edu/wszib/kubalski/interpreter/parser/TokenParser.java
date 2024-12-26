@@ -8,8 +8,6 @@ import pl.edu.wszib.kubalski.interpreter.expression.factory.ExpressionFactoryHel
 
 import java.util.List;
 
-
-
 /**
  * The TokenParser class is responsible for parsing a list of tokens and constructing
  * an abstract syntax tree (AST) representing mathematical or logical expressions.

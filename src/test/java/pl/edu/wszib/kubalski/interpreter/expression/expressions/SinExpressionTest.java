@@ -1,7 +1,6 @@
 package pl.edu.wszib.kubalski.interpreter.expression.expressions;
 
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import pl.edu.wszib.kubalski.interpreter.Context;
 import pl.edu.wszib.kubalski.interpreter.expression.Expression;
 

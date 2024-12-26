@@ -8,7 +8,6 @@ import pl.edu.wszib.kubalski.interpreter.expression.factory.ExpressionFactoryHel
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
-
 /**
  * The TokenParserFactory class is responsible for creating instances of the TokenParser class
  * using the provided prototype, expression factory, and helper objects.
