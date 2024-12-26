@@ -2,6 +2,7 @@ package pl.edu.wszib.kubalski;
 
 import pl.edu.wszib.kubalski.interpreter.Context;
 import pl.edu.wszib.kubalski.interpreter.Interpreter;
+import pl.edu.wszib.kubalski.interpreter.expression.ExpressionType;
 import pl.edu.wszib.kubalski.interpreter.expression.factory.ExpressionFactory;
 import pl.edu.wszib.kubalski.interpreter.expression.factory.ExpressionFactoryHelper;
 import pl.edu.wszib.kubalski.interpreter.expression.factory.ExpressionFactoryStore;
@@ -10,7 +11,9 @@ import pl.edu.wszib.kubalski.interpreter.parser.TokenParserFactory;
 import pl.edu.wszib.kubalski.interpreter.tokenizer.BaseTokenizer;
 import pl.edu.wszib.kubalski.interpreter.tokenizer.Tokenizer;
 
+import java.util.Arrays;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 
 /**
@@ -48,6 +51,7 @@ public class Calculator {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("Welcome! Type 'exit' to quit.");
+        listAvailableOperators();
 
         while (true) {
             System.out.println("Provide expression to calculate:");
@@ -67,6 +71,22 @@ public class Calculator {
                 System.out.println("An error occurred: " + e.getMessage());
             }
         }
+    }
+
+    private void listAvailableOperators() {
+        System.out.println("Available operators:");
+        Arrays.stream(ExpressionType.values())
+                .filter(ExpressionType::isPrintable)
+                .collect(Collectors.groupingBy(ExpressionType::getGroup))
+                .forEach((group, types) -> {
+                    System.out.printf(" %s%n", group);
+                    types.stream()
+                            .map(ExpressionType::toString)
+                            .filter(s -> !s.isBlank())
+                            .map(s -> String.format("  - %s", s))
+                            .forEach(System.out::println);
+                });
+
     }
 
     private Interpreter getInterpreter(Context context) {
