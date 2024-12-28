@@ -46,10 +46,10 @@ logical expressions provided as strings.
 
 ## Setup Instructions
 
-1. Clone the repository: `git clone <repository_url>`
+1. Clone the repository: `git clone https://github.com/Sarkel/scientific-calculator.git`
 2. Open the project in your IDE.
 3. Ensure Java 17 is set as the project SDK.
-4. Build the project using Maven: `mvn clean install` or Gradle: `gradlew build`
+4. Build the project using Maven: `mvn clean install`
 
 ## Usage
 
