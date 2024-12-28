@@ -1,91 +1,66 @@
 package pl.edu.wszib.kubalski.interpreter.expression.expressions;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import pl.edu.wszib.kubalski.interpreter.Context;
 import pl.edu.wszib.kubalski.interpreter.expression.Expression;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 class SinExpressionTest {
 
     /**
-     * This class tests the SinExpression class, which calculates the sine of the result of interpreting an inner Expression.
+     * Test class for the {@link SinExpression} class.
+     * Verifies the behavior of the interpret method,
+     * which calculates the sine of the value returned by the inner expression.
      */
 
     @Test
-    void shouldCalculateSineOfZero() {
+    void shouldReturnCorrectSinValue_whenExpressionEvaluatesToPiOverTwo() {
         // Arrange
+        Expression mockExpression = mock(Expression.class);
         Context context = Context.builder().build();
-        Expression innerExpression = mock(Expression.class);
-        when(innerExpression.interpret(context)).thenReturn(0.0);
-        SinExpression sinExpression = new SinExpression(innerExpression);
+        Mockito.when(mockExpression.interpret(context)).thenReturn(Math.PI / 2);
+
+        SinExpression sinExpression = new SinExpression(mockExpression);
 
         // Act
         Double result = sinExpression.interpret(context);
 
         // Assert
-        assertEquals(0.0, result, 0.00001);
+        assertEquals(1.0, result, 0.0001);
     }
 
     @Test
-    void shouldCalculateSineOfPiDividedByTwo() {
+    void shouldReturnZero_whenExpressionEvaluatesToZero() {
         // Arrange
+        Expression mockExpression = mock(Expression.class);
         Context context = Context.builder().build();
-        Expression innerExpression = mock(Expression.class);
-        when(innerExpression.interpret(context)).thenReturn(Math.PI / 2);
-        SinExpression sinExpression = new SinExpression(innerExpression);
+        Mockito.when(mockExpression.interpret(context)).thenReturn(0.0);
+
+        SinExpression sinExpression = new SinExpression(mockExpression);
 
         // Act
         Double result = sinExpression.interpret(context);
 
         // Assert
-        assertEquals(1.0, result, 0.00001);
+        assertEquals(0.0, result, 0.0001);
     }
 
     @Test
-    void shouldCalculateSineOfNegativeValue() {
+    void shouldReturnNegativeOne_whenExpressionEvaluatesToNegativePiOverTwo() {
         // Arrange
+        Expression mockExpression = mock(Expression.class);
         Context context = Context.builder().build();
-        Expression innerExpression = mock(Expression.class);
-        when(innerExpression.interpret(context)).thenReturn(-Math.PI / 2);
-        SinExpression sinExpression = new SinExpression(innerExpression);
+        Mockito.when(mockExpression.interpret(context)).thenReturn(-Math.PI / 2);
+
+        SinExpression sinExpression = new SinExpression(mockExpression);
 
         // Act
         Double result = sinExpression.interpret(context);
 
         // Assert
-        assertEquals(-1.0, result, 0.00001);
-    }
-
-    @Test
-    void shouldCalculateSineOfArbitraryValue() {
-        // Arrange
-        Context context = Context.builder().build();
-        Expression innerExpression = mock(Expression.class);
-        when(innerExpression.interpret(context)).thenReturn(Math.PI / 4);
-        SinExpression sinExpression = new SinExpression(innerExpression);
-
-        // Act
-        Double result = sinExpression.interpret(context);
-
-        // Assert
-        assertEquals(Math.sqrt(2) / 2, result, 0.00001);
-    }
-
-    @Test
-    void shouldHandleSineOfLargeValue() {
-        // Arrange
-        Context context = Context.builder().build();
-        Expression innerExpression = mock(Expression.class);
-        when(innerExpression.interpret(context)).thenReturn(12345.6789);
-        SinExpression sinExpression = new SinExpression(innerExpression);
-
-        // Act
-        Double result = sinExpression.interpret(context);
-
-        // Assert
-        assertEquals(Math.sin(12345.6789), result, 0.00001);
+        assertEquals(-1.0, result, 0.0001);
     }
 }

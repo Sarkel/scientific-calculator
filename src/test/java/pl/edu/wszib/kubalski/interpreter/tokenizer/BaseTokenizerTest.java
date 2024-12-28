@@ -11,90 +11,122 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class BaseTokenizerTest {
 
     /**
-     * Tests for the `BaseTokenizer` class.
-     * <p>
-     * The `BaseTokenizer` class is responsible for tokenizing mathematical or logical expressions.
-     * The `tokenize` method processes a given expression and splits it into individual tokens
-     * based on predefined patterns, such as numbers, operators, functions, etc.
+     * Test class for BaseTokenizer.
+     * Verifies the functionality of tokenize method, which splits expressions
+     * into a list of tokens based on operators, numbers, functions, and constants.
      */
 
     @Test
-    void testTokenizeWithNumbersAndOperators() {
-        ExpressionFactoryHelper helper = Mockito.mock(ExpressionFactoryHelper.class);
-        Mockito.when(helper.getHighPriorityExpressions()).thenReturn(new String[]{"*", "/"});
-        Mockito.when(helper.getLowPriorityExpressions()).thenReturn(new String[]{"+", "-"});
-        Mockito.when(helper.getFunctionalExpressions()).thenReturn(new String[]{});
-        Mockito.when(helper.getConstantExpressions()).thenReturn(new String[]{});
+    void shouldTokenize_whenExpressionContainsNumbersOnly() {
+        // Arrange
+        ExpressionFactoryHelper mockFactoryHelper = Mockito.mock(ExpressionFactoryHelper.class);
+        Mockito.when(mockFactoryHelper.getHighPriorityExpressions()).thenReturn(new String[]{});
+        Mockito.when(mockFactoryHelper.getLowPriorityExpressions()).thenReturn(new String[]{});
+        Mockito.when(mockFactoryHelper.getFunctionalExpressions()).thenReturn(new String[]{});
+        Mockito.when(mockFactoryHelper.getConstantExpressions()).thenReturn(new String[]{});
 
-        BaseTokenizer tokenizer = new BaseTokenizer(helper);
-        String expression = "3+5*2";
+        BaseTokenizer tokenizer = new BaseTokenizer(mockFactoryHelper);
+        String expression = "123 456.78";
 
-        List<String> result = tokenizer.tokenize(expression);
+        // Act
+        List<String> tokens = tokenizer.tokenize(expression);
 
-        assertEquals(List.of("3", "+", "5", "*", "2"), result);
+        // Assert
+        assertEquals(List.of("123", "456.78"), tokens);
     }
 
     @Test
-    void testTokenizeWithParentheses() {
-        ExpressionFactoryHelper helper = Mockito.mock(ExpressionFactoryHelper.class);
-        Mockito.when(helper.getHighPriorityExpressions()).thenReturn(new String[]{"*", "/"});
-        Mockito.when(helper.getLowPriorityExpressions()).thenReturn(new String[]{"+", "-"});
-        Mockito.when(helper.getFunctionalExpressions()).thenReturn(new String[]{});
-        Mockito.when(helper.getConstantExpressions()).thenReturn(new String[]{});
+    void shouldTokenize_whenExpressionContainsOperators() {
+        // Arrange
+        ExpressionFactoryHelper mockFactoryHelper = Mockito.mock(ExpressionFactoryHelper.class);
+        Mockito.when(mockFactoryHelper.getHighPriorityExpressions()).thenReturn(new String[]{"+", "-"});
+        Mockito.when(mockFactoryHelper.getLowPriorityExpressions()).thenReturn(new String[]{"*", "/"});
+        Mockito.when(mockFactoryHelper.getFunctionalExpressions()).thenReturn(new String[]{});
+        Mockito.when(mockFactoryHelper.getConstantExpressions()).thenReturn(new String[]{});
 
-        BaseTokenizer tokenizer = new BaseTokenizer(helper);
-        String expression = "(3+5)*2";
+        BaseTokenizer tokenizer = new BaseTokenizer(mockFactoryHelper);
+        String expression = "2+3-4*5/6";
 
-        List<String> result = tokenizer.tokenize(expression);
+        // Act
+        List<String> tokens = tokenizer.tokenize(expression);
 
-        assertEquals(List.of("(", "3", "+", "5", ")", "*", "2"), result);
+        // Assert
+        assertEquals(List.of("2", "+", "3", "-", "4", "*", "5", "/", "6"), tokens);
     }
 
     @Test
-    void testTokenizeWithFunctionsAndConstants() {
-        ExpressionFactoryHelper helper = Mockito.mock(ExpressionFactoryHelper.class);
-        Mockito.when(helper.getHighPriorityExpressions()).thenReturn(new String[]{"^"});
-        Mockito.when(helper.getLowPriorityExpressions()).thenReturn(new String[]{"+", "-"});
-        Mockito.when(helper.getFunctionalExpressions()).thenReturn(new String[]{"sin", "cos"});
-        Mockito.when(helper.getConstantExpressions()).thenReturn(new String[]{"pi", "e"});
+    void shouldTokenize_whenExpressionContainsFunctionsAndConstants() {
+        // Arrange
+        ExpressionFactoryHelper mockFactoryHelper = Mockito.mock(ExpressionFactoryHelper.class);
+        Mockito.when(mockFactoryHelper.getHighPriorityExpressions()).thenReturn(new String[]{});
+        Mockito.when(mockFactoryHelper.getLowPriorityExpressions()).thenReturn(new String[]{"+"});
+        Mockito.when(mockFactoryHelper.getFunctionalExpressions()).thenReturn(new String[]{"sin", "cos"});
+        Mockito.when(mockFactoryHelper.getConstantExpressions()).thenReturn(new String[]{"pi", "e"});
 
-        BaseTokenizer tokenizer = new BaseTokenizer(helper);
-        String expression = "sin(PI)+cos(E)";
+        BaseTokenizer tokenizer = new BaseTokenizer(mockFactoryHelper);
+        String expression = "sin(pi)+cos(e)";
 
-        List<String> result = tokenizer.tokenize(expression);
+        // Act
+        List<String> tokens = tokenizer.tokenize(expression);
 
-        assertEquals(List.of("sin", "(", "pi", ")", "+", "cos", "(", "e", ")"), result);
+        // Assert
+        assertEquals(List.of("sin", "(", "pi", ")", "+", "cos", "(", "e", ")"), tokens);
     }
 
     @Test
-    void testTokenizeWithDecimalNumbers() {
-        ExpressionFactoryHelper helper = Mockito.mock(ExpressionFactoryHelper.class);
-        Mockito.when(helper.getHighPriorityExpressions()).thenReturn(new String[]{"*", "/"});
-        Mockito.when(helper.getLowPriorityExpressions()).thenReturn(new String[]{"+", "-"});
-        Mockito.when(helper.getFunctionalExpressions()).thenReturn(new String[]{});
-        Mockito.when(helper.getConstantExpressions()).thenReturn(new String[]{});
+    void shouldTokenize_whenExpressionIsEmpty() {
+        // Arrange
+        ExpressionFactoryHelper mockFactoryHelper = Mockito.mock(ExpressionFactoryHelper.class);
+        Mockito.when(mockFactoryHelper.getHighPriorityExpressions()).thenReturn(new String[]{});
+        Mockito.when(mockFactoryHelper.getLowPriorityExpressions()).thenReturn(new String[]{});
+        Mockito.when(mockFactoryHelper.getFunctionalExpressions()).thenReturn(new String[]{});
+        Mockito.when(mockFactoryHelper.getConstantExpressions()).thenReturn(new String[]{});
 
-        BaseTokenizer tokenizer = new BaseTokenizer(helper);
-        String expression = "3.14+2.71";
-
-        List<String> result = tokenizer.tokenize(expression);
-
-        assertEquals(List.of("3.14", "+", "2.71"), result);
-    }
-
-    @Test
-    void testTokenizeWithEmptyExpression() {
-        ExpressionFactoryHelper helper = Mockito.mock(ExpressionFactoryHelper.class);
-        Mockito.when(helper.getHighPriorityExpressions()).thenReturn(new String[]{"*", "/"});
-        Mockito.when(helper.getLowPriorityExpressions()).thenReturn(new String[]{"+", "-"});
-        Mockito.when(helper.getFunctionalExpressions()).thenReturn(new String[]{});
-        Mockito.when(helper.getConstantExpressions()).thenReturn(new String[]{});
-
-        BaseTokenizer tokenizer = new BaseTokenizer(helper);
+        BaseTokenizer tokenizer = new BaseTokenizer(mockFactoryHelper);
         String expression = "";
 
-        List<String> result = tokenizer.tokenize(expression);
+        // Act
+        List<String> tokens = tokenizer.tokenize(expression);
 
-        assertEquals(List.of(), result);
+        // Assert
+        assertEquals(List.of(), tokens);
+    }
+
+    @Test
+    void shouldTokenize_whenExpressionContainsWhitespaceOnly() {
+        // Arrange
+        ExpressionFactoryHelper mockFactoryHelper = Mockito.mock(ExpressionFactoryHelper.class);
+        Mockito.when(mockFactoryHelper.getHighPriorityExpressions()).thenReturn(new String[]{});
+        Mockito.when(mockFactoryHelper.getLowPriorityExpressions()).thenReturn(new String[]{});
+        Mockito.when(mockFactoryHelper.getFunctionalExpressions()).thenReturn(new String[]{});
+        Mockito.when(mockFactoryHelper.getConstantExpressions()).thenReturn(new String[]{});
+
+        BaseTokenizer tokenizer = new BaseTokenizer(mockFactoryHelper);
+        String expression = "   ";
+
+        // Act
+        List<String> tokens = tokenizer.tokenize(expression);
+
+        // Assert
+        assertEquals(List.of(), tokens);
+    }
+
+    @Test
+    void shouldTokenize_whenExpressionContainsMixedElements() {
+        // Arrange
+        ExpressionFactoryHelper mockFactoryHelper = Mockito.mock(ExpressionFactoryHelper.class);
+        Mockito.when(mockFactoryHelper.getHighPriorityExpressions()).thenReturn(new String[]{"*", "/"});
+        Mockito.when(mockFactoryHelper.getLowPriorityExpressions()).thenReturn(new String[]{"+", "-"});
+        Mockito.when(mockFactoryHelper.getFunctionalExpressions()).thenReturn(new String[]{"sqrt"});
+        Mockito.when(mockFactoryHelper.getConstantExpressions()).thenReturn(new String[]{"pi"});
+
+        BaseTokenizer tokenizer = new BaseTokenizer(mockFactoryHelper);
+        String expression = "sqrt(pi)+2*3-4/5";
+
+        // Act
+        List<String> tokens = tokenizer.tokenize(expression);
+
+        // Assert
+        assertEquals(List.of("sqrt", "(", "pi", ")", "+", "2", "*", "3", "-", "4", "/", "5"), tokens);
     }
 }

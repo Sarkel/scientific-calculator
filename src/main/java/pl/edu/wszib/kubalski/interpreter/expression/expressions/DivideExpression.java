@@ -38,10 +38,10 @@ public class DivideExpression implements Expression {
 
     @Override
     public Double interpret(Context context) {
-        Double leftValue = left.interpret(context);
-        if (leftValue == 0) {
+        Double rightValue = right.interpret(context);
+        if (rightValue == 0) {
             throw new ArithmeticException("Division by zero");
         }
-        return right.interpret(context) / leftValue;
+        return left.interpret(context) / rightValue;
     }
 }

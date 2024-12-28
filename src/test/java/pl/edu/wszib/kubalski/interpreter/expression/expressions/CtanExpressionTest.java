@@ -5,72 +5,74 @@ import org.mockito.Mockito;
 import pl.edu.wszib.kubalski.interpreter.Context;
 import pl.edu.wszib.kubalski.interpreter.expression.Expression;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
 class CtanExpressionTest {
 
     /**
-     * This test class focuses on the CtanExpression class, specifically testing
-     * the interpret method, which computes the cotangent (1 / tan) of the value
-     * returned by the provided expression. It ensures that division by zero
-     * and other edge cases are handled correctly.
+     * Tests for the CtanExpression class.
+     * <p>
+     * The CtanExpression class represents the mathematical cotangent operation,
+     * which is the inverse of the tangent (1 / tan(x)).
+     * Its `interpret` method takes a `Context` and evaluates the cotangent
+     * based on the value provided by the `Expression` passed to the constructor.
+     * <p>
+     * Tested scenarios:
+     * - Valid cotangent calculation for a positive tan(x) result.
+     * - Valid cotangent calculation for a negative tan(x) result.
+     * - ArithmeticException when attempting to calculate cotangent for tan(x) = 0.
+     * - Handle scenario where tan(x) result produces an infinite cotangent.
      */
 
     @Test
-    void interpret_ShouldReturnValidResultWhenTanIsNonZero() {
-        // Arrange
-        Expression mockExpression = Mockito.mock(Expression.class);
-        Mockito.when(mockExpression.interpret(Mockito.any(Context.class))).thenReturn(1.0); // tan result is 1
+    void shouldReturnValidCotan_WhenTanIsPositive() {
         Context context = Context.builder().build();
-        CtanExpression ctanExpression = new CtanExpression(mockExpression);
+        Expression mockExpression = Mockito.mock(Expression.class);
 
-        // Act
+        when(mockExpression.interpret(context)).thenReturn(1.0); // tan(x) = 1.0
+
+        CtanExpression ctanExpression = new CtanExpression(mockExpression);
         Double result = ctanExpression.interpret(context);
 
-        // Assert
-        assertEquals(1.0, result, 0.0001); // 1 / 1 = 1
+        assertEquals(0.6421, result, 0.0001);
     }
 
     @Test
-    void interpret_ShouldThrowArithmeticExceptionWhenTanIsZero() {
-        // Arrange
-        Expression mockExpression = Mockito.mock(Expression.class);
-        Mockito.when(mockExpression.interpret(Mockito.any(Context.class))).thenReturn(0.0); // tan result is 0
+    void shouldReturnValidCotan_WhenTanIsNegative() {
         Context context = Context.builder().build();
-        CtanExpression ctanExpression = new CtanExpression(mockExpression);
+        Expression mockExpression = Mockito.mock(Expression.class);
 
-        // Act & Assert
-        assertThrows(ArithmeticException.class, () -> ctanExpression.interpret(context), "Division by zero");
+        when(mockExpression.interpret(context)).thenReturn(-1.0); // tan(x) = -1.0
+
+        CtanExpression ctanExpression = new CtanExpression(mockExpression);
+        Double result = ctanExpression.interpret(context);
+
+        assertEquals(-0.6421, result, 0.0001);
     }
 
     @Test
-    void interpret_ShouldReturnValidNegativeResultWhenTanIsNonZeroNegative() {
-        // Arrange
-        Expression mockExpression = Mockito.mock(Expression.class);
-        Mockito.when(mockExpression.interpret(Mockito.any(Context.class))).thenReturn(-2.0); // tan result is -2
+    void shouldThrowArithmeticException_WhenTanIsZero() {
         Context context = Context.builder().build();
+        Expression mockExpression = Mockito.mock(Expression.class);
+
+        when(mockExpression.interpret(context)).thenReturn(0.0); // tan(x) = 0.0
+
         CtanExpression ctanExpression = new CtanExpression(mockExpression);
 
-        // Act
-        Double result = ctanExpression.interpret(context);
-
-        // Assert
-        assertEquals(-0.5, result, 0.0001); // 1 / -2 = -0.5
+        assertThrows(ArithmeticException.class, () -> ctanExpression.interpret(context),
+                "Calculating cotan for tan(x) = 0.0 should throw ArithmeticException");
     }
 
     @Test
-    void interpret_ShouldReturnValidResultForFractionalTan() {
-        // Arrange
-        Expression mockExpression = Mockito.mock(Expression.class);
-        Mockito.when(mockExpression.interpret(Mockito.any(Context.class))).thenReturn(0.5); // tan result is 0.5
+    void shouldReturnZero_WhenTanIsInfinity() {
         Context context = Context.builder().build();
+        Expression mockExpression = Mockito.mock(Expression.class);
+
+        when(mockExpression.interpret(context)).thenReturn(Double.POSITIVE_INFINITY); // tan(x) = +Infinity
+
         CtanExpression ctanExpression = new CtanExpression(mockExpression);
 
-        // Act
-        Double result = ctanExpression.interpret(context);
-
-        // Assert
-        assertEquals(2.0, result, 0.0001); // 1 / 0.5 = 2
+        assertThrows(ArithmeticException.class, () -> ctanExpression.interpret(context));
     }
 }

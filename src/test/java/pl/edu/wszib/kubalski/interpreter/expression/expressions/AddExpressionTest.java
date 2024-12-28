@@ -6,104 +6,102 @@ import pl.edu.wszib.kubalski.interpreter.Context;
 import pl.edu.wszib.kubalski.interpreter.expression.Expression;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 class AddExpressionTest {
 
     /**
-     * Tests the AddExpression class, which represents an addition operation
-     * of two sub-expressions. The `interpret` method takes a context and
-     * computes the sum of the interpreted results of its left and right expressions.
+     * The AddExpression class represents an addition operation between two expressions.
+     * The interpret method takes a Context object, evaluates the left and right expressions,
+     * adds their results, and returns the sum.
      */
 
     @Test
-    void shouldEvaluateExpressionWithTwoPositiveNumbers() {
+    void shouldReturnSumOfPositiveNumbers_whenPositiveNumbersAreInterpreted() {
         // Arrange
         Context context = Context.builder().build();
-        Expression left = mock(Expression.class);
-        Expression right = mock(Expression.class);
-        when(left.interpret(context)).thenReturn(5.0);
-        when(right.interpret(context)).thenReturn(3.0);
+        Expression left = Mockito.mock(Expression.class);
+        Expression right = Mockito.mock(Expression.class);
 
+        Mockito.when(left.interpret(context)).thenReturn(10.0);
+        Mockito.when(right.interpret(context)).thenReturn(15.0);
         AddExpression addExpression = new AddExpression(left, right);
 
         // Act
         Double result = addExpression.interpret(context);
 
         // Assert
-        assertEquals(8.0, result);
+        assertEquals(25.0, result);
     }
 
     @Test
-    void shouldEvaluateExpressionWithPositiveAndNegativeNumber() {
+    void shouldReturnSumOfNegativeNumbers_whenNegativeNumbersAreInterpreted() {
         // Arrange
         Context context = Context.builder().build();
-        Expression left = mock(Expression.class);
-        Expression right = mock(Expression.class);
-        when(left.interpret(context)).thenReturn(10.0);
-        when(right.interpret(context)).thenReturn(-4.0);
+        Expression left = Mockito.mock(Expression.class);
+        Expression right = Mockito.mock(Expression.class);
 
+        Mockito.when(left.interpret(context)).thenReturn(-10.0);
+        Mockito.when(right.interpret(context)).thenReturn(-25.0);
         AddExpression addExpression = new AddExpression(left, right);
 
         // Act
         Double result = addExpression.interpret(context);
 
         // Assert
-        assertEquals(6.0, result);
+        assertEquals(-35.0, result);
     }
 
     @Test
-    void shouldEvaluateExpressionWithTwoNegativeNumbers() {
+    void shouldReturnCorrectSum_whenPositiveAndNegativeNumberAreInterpreted() {
         // Arrange
         Context context = Context.builder().build();
-        Expression left = mock(Expression.class);
-        Expression right = mock(Expression.class);
-        when(left.interpret(context)).thenReturn(-7.0);
-        when(right.interpret(context)).thenReturn(-3.0);
+        Expression left = Mockito.mock(Expression.class);
+        Expression right = Mockito.mock(Expression.class);
 
+        Mockito.when(left.interpret(context)).thenReturn(20.0);
+        Mockito.when(right.interpret(context)).thenReturn(-5.0);
         AddExpression addExpression = new AddExpression(left, right);
 
         // Act
         Double result = addExpression.interpret(context);
 
         // Assert
-        assertEquals(-10.0, result);
+        assertEquals(15.0, result);
     }
 
     @Test
-    void shouldEvaluateExpressionWithZeroAndPositiveNumber() {
+    void shouldReturnNumber_whenZeroAndNumberAreInterpreted() {
         // Arrange
         Context context = Context.builder().build();
-        Expression left = mock(Expression.class);
-        Expression right = mock(Expression.class);
-        when(left.interpret(context)).thenReturn(0.0);
-        when(right.interpret(context)).thenReturn(5.0);
+        Expression left = Mockito.mock(Expression.class);
+        Expression right = Mockito.mock(Expression.class);
 
+        Mockito.when(left.interpret(context)).thenReturn(0.0);
+        Mockito.when(right.interpret(context)).thenReturn(42.0);
         AddExpression addExpression = new AddExpression(left, right);
 
         // Act
         Double result = addExpression.interpret(context);
 
         // Assert
-        assertEquals(5.0, result);
+        assertEquals(42.0, result);
     }
 
     @Test
-    void shouldEvaluateExpressionWithZeroAndNegativeNumber() {
+    void shouldReturnZero_whenZeroAndZeroAreInterpreted() {
         // Arrange
         Context context = Context.builder().build();
-        Expression left = mock(Expression.class);
-        Expression right = mock(Expression.class);
-        when(left.interpret(context)).thenReturn(0.0);
-        when(right.interpret(context)).thenReturn(-5.0);
+        Expression left = Mockito.mock(Expression.class);
+        Expression right = Mockito.mock(Expression.class);
 
+        Mockito.when(left.interpret(context)).thenReturn(0.0);
+        Mockito.when(right.interpret(context)).thenReturn(0.0);
         AddExpression addExpression = new AddExpression(left, right);
 
         // Act
         Double result = addExpression.interpret(context);
 
         // Assert
-        assertEquals(-5.0, result);
+        assertEquals(0.0, result);
     }
 }

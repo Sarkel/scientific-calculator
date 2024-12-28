@@ -65,10 +65,11 @@ public class Calculator {
             try {
                 Double result = interpreter.interpret(line);
                 System.out.printf("Result: %f\n", result);
-            } catch (NumberFormatException e) {
+            } catch (ArithmeticException | NumberFormatException e) {
                 System.out.println("Invalid input. Please enter a valid expression.");
             } catch (Exception e) {
-                System.out.println("An error occurred: " + e.getMessage());
+                System.out.println("An unexpected error occurred: " + e.getMessage());
+                System.exit(1);
             }
         }
     }

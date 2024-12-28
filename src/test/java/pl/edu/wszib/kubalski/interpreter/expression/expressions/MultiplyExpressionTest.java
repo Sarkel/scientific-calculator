@@ -6,26 +6,24 @@ import pl.edu.wszib.kubalski.interpreter.Context;
 import pl.edu.wszib.kubalski.interpreter.expression.Expression;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 class MultiplyExpressionTest {
 
     /**
-     * Test class for the MultiplyExpression class.
-     * Focuses on ensuring the interpret method correctly multiplies values
-     * from two provided expressions using the given context.
+     * Test class for the MultiplyExpression.
+     * This class tests the `interpret` method, which calculates the product
+     * of two expressions by interpreting their values in the given context.
      */
 
     @Test
-    void interpret_shouldReturnCorrectProduct_whenBothOperandsArePositive() {
+    void shouldReturnProduct_WhenBothNumbersArePositive() {
         // Arrange
         Context context = Context.builder().build();
-        Expression left = mock(Expression.class);
-        Expression right = mock(Expression.class);
+        Expression left = Mockito.mock(Expression.class);
+        Expression right = Mockito.mock(Expression.class);
 
-        when(left.interpret(context)).thenReturn(4.0);
-        when(right.interpret(context)).thenReturn(3.0);
+        Mockito.when(left.interpret(context)).thenReturn(5.0);
+        Mockito.when(right.interpret(context)).thenReturn(3.0);
 
         MultiplyExpression multiplyExpression = new MultiplyExpression(left, right);
 
@@ -33,18 +31,18 @@ class MultiplyExpressionTest {
         Double result = multiplyExpression.interpret(context);
 
         // Assert
-        assertEquals(12.0, result);
+        assertEquals(15.0, result);
     }
 
     @Test
-    void interpret_shouldReturnZero_whenOneOperandIsZero() {
+    void shouldReturnProduct_WhenBothNumbersAreNegative() {
         // Arrange
         Context context = Context.builder().build();
-        Expression left = mock(Expression.class);
-        Expression right = mock(Expression.class);
+        Expression left = Mockito.mock(Expression.class);
+        Expression right = Mockito.mock(Expression.class);
 
-        when(left.interpret(context)).thenReturn(0.0);
-        when(right.interpret(context)).thenReturn(5.0);
+        Mockito.when(left.interpret(context)).thenReturn(-4.0);
+        Mockito.when(right.interpret(context)).thenReturn(-2.0);
 
         MultiplyExpression multiplyExpression = new MultiplyExpression(left, right);
 
@@ -52,18 +50,18 @@ class MultiplyExpressionTest {
         Double result = multiplyExpression.interpret(context);
 
         // Assert
-        assertEquals(0.0, result);
+        assertEquals(8.0, result);
     }
 
     @Test
-    void interpret_shouldReturnNegativeProduct_whenOneOperandIsNegative() {
+    void shouldReturnProduct_WhenOneNumberIsPositiveAndOneIsNegative() {
         // Arrange
         Context context = Context.builder().build();
-        Expression left = mock(Expression.class);
-        Expression right = mock(Expression.class);
+        Expression left = Mockito.mock(Expression.class);
+        Expression right = Mockito.mock(Expression.class);
 
-        when(left.interpret(context)).thenReturn(-4.0);
-        when(right.interpret(context)).thenReturn(3.0);
+        Mockito.when(left.interpret(context)).thenReturn(-6.0);
+        Mockito.when(right.interpret(context)).thenReturn(2.0);
 
         MultiplyExpression multiplyExpression = new MultiplyExpression(left, right);
 
@@ -75,14 +73,14 @@ class MultiplyExpressionTest {
     }
 
     @Test
-    void interpret_shouldReturnPositiveProduct_whenBothOperandsAreNegative() {
+    void shouldReturnZero_WhenOneNumberIsZero() {
         // Arrange
         Context context = Context.builder().build();
-        Expression left = mock(Expression.class);
-        Expression right = mock(Expression.class);
+        Expression left = Mockito.mock(Expression.class);
+        Expression right = Mockito.mock(Expression.class);
 
-        when(left.interpret(context)).thenReturn(-2.0);
-        when(right.interpret(context)).thenReturn(-3.0);
+        Mockito.when(left.interpret(context)).thenReturn(0.0);
+        Mockito.when(right.interpret(context)).thenReturn(7.0);
 
         MultiplyExpression multiplyExpression = new MultiplyExpression(left, right);
 
@@ -90,18 +88,18 @@ class MultiplyExpressionTest {
         Double result = multiplyExpression.interpret(context);
 
         // Assert
-        assertEquals(6.0, result);
+        assertEquals(0.0, result);
     }
 
     @Test
-    void interpret_shouldReturnCorrectProduct_whenOperandsAreDecimalNumbers() {
+    void shouldReturnZero_WhenBothNumbersAreZero() {
         // Arrange
         Context context = Context.builder().build();
-        Expression left = mock(Expression.class);
-        Expression right = mock(Expression.class);
+        Expression left = Mockito.mock(Expression.class);
+        Expression right = Mockito.mock(Expression.class);
 
-        when(left.interpret(context)).thenReturn(2.5);
-        when(right.interpret(context)).thenReturn(1.2);
+        Mockito.when(left.interpret(context)).thenReturn(0.0);
+        Mockito.when(right.interpret(context)).thenReturn(0.0);
 
         MultiplyExpression multiplyExpression = new MultiplyExpression(left, right);
 
@@ -109,6 +107,6 @@ class MultiplyExpressionTest {
         Double result = multiplyExpression.interpret(context);
 
         // Assert
-        assertEquals(3.0, result);
+        assertEquals(0.0, result);
     }
 }

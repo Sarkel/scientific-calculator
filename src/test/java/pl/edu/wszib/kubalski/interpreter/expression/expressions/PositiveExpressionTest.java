@@ -1,75 +1,66 @@
 package pl.edu.wszib.kubalski.interpreter.expression.expressions;
 
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import pl.edu.wszib.kubalski.interpreter.Context;
-import pl.edu.wszib.kubalski.interpreter.expression.Expression;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
+import pl.edu.wszib.kubalski.interpreter.Context;
+import pl.edu.wszib.kubalski.interpreter.expression.Expression;
+
+/**
+ * Test class for PositiveExpression.
+ * The PositiveExpression class is responsible for returning the positive value
+ * of a given expression by delegating to the interpret method of the wrapped expression.
+ */
 class PositiveExpressionTest {
 
-    /**
-     * Class under test: PositiveExpression.
-     * <p>
-     * Description:
-     * The PositiveExpression class represents an interpretation of a numeric
-     * expression that always yields the positive value (+) of the result
-     * computed by the inner expression.
-     * <p>
-     * Method under test: interpret(Context context)
-     * <p>
-     * Description:
-     * The interpret method evaluates the given context via the wrapped expression
-     * and returns its positive equivalent.
-     */
-
     @Test
-    void interpret_shouldReturnPositiveValue_whenExpressionReturnsPositiveValue() {
-        // Arrange
-        Expression mockedExpression = mock(Expression.class);
+    void shouldReturnPositiveValue_whenWrappedExpressionReturnsPositiveValue() {
+        // Prepare
         Context context = Context.builder().build();
-        Mockito.when(mockedExpression.interpret(context)).thenReturn(25.3);
+        Expression mockExpression = mock(Expression.class);
+        when(mockExpression.interpret(context)).thenReturn(42.0);
 
-        PositiveExpression positiveExpression = new PositiveExpression(mockedExpression);
+        PositiveExpression positiveExpression = new PositiveExpression(mockExpression);
 
-        // Act
+        // Execute
         Double result = positiveExpression.interpret(context);
 
-        // Assert
-        assertEquals(25.3, result);
+        // Verify
+        assertEquals(42.0, result);
     }
 
     @Test
-    void interpret_shouldReturnPositiveValue_whenExpressionReturnsNegativeValue() {
-        // Arrange
-        Expression mockedExpression = mock(Expression.class);
+    void shouldReturnNegativeValue_whenWrappedExpressionReturnsNegativeValue() {
+        // Prepare
         Context context = Context.builder().build();
-        Mockito.when(mockedExpression.interpret(context)).thenReturn(-42.7);
+        Expression mockExpression = mock(Expression.class);
+        when(mockExpression.interpret(context)).thenReturn(-25.5);
 
-        PositiveExpression positiveExpression = new PositiveExpression(mockedExpression);
+        PositiveExpression positiveExpression = new PositiveExpression(mockExpression);
 
-        // Act
+        // Execute
         Double result = positiveExpression.interpret(context);
 
-        // Assert
-        assertEquals(-42.7, result);
+        // Verify
+        assertEquals(-25.5, result);
     }
 
     @Test
-    void interpret_shouldReturnZero_whenExpressionReturnsZero() {
-        // Arrange
-        Expression mockedExpression = mock(Expression.class);
+    void shouldReturnZero_whenWrappedExpressionReturnsZeroValue() {
+        // Prepare
         Context context = Context.builder().build();
-        Mockito.when(mockedExpression.interpret(context)).thenReturn(0.0);
+        Expression mockExpression = mock(Expression.class);
+        when(mockExpression.interpret(context)).thenReturn(0.0);
 
-        PositiveExpression positiveExpression = new PositiveExpression(mockedExpression);
+        PositiveExpression positiveExpression = new PositiveExpression(mockExpression);
 
-        // Act
+        // Execute
         Double result = positiveExpression.interpret(context);
 
-        // Assert
+        // Verify
         assertEquals(0.0, result);
     }
 }

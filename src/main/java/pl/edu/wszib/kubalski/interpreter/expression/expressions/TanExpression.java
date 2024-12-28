@@ -32,6 +32,12 @@ public class TanExpression implements Expression {
 
     @Override
     public Double interpret(Context context) {
-        return Math.tan(expression.interpret(context));
+        double result = Math.tan(expression.interpret(context));
+
+        if (Double.isInfinite(result) || Double.isNaN(result)) {
+            throw new ArithmeticException("Argument cannot be infinite or NaN");
+        }
+
+        return result;
     }
 }

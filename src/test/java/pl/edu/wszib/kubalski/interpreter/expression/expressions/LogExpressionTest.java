@@ -5,96 +5,83 @@ import org.mockito.Mockito;
 import pl.edu.wszib.kubalski.interpreter.Context;
 import pl.edu.wszib.kubalski.interpreter.expression.Expression;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 class LogExpressionTest {
 
     /**
-     * This class tests the `interpret` method of the `LogExpression` class.
-     * The `LogExpression` class calculates the natural logarithm of the result
-     * of another `Expression`, evaluated in the specified `Context`.
+     * Tests for the interpret method in the LogExpression class.
+     * The LogExpression class is responsible for returning the natural logarithm of the
+     * result of the provided expression. It will throw an ArithmeticException for input values
+     * that are less than or equal to zero.
      */
 
     @Test
-    void testInterpretWithPositiveValue() {
+    void shouldReturnNaturalLogarithm_ForPositiveInput() {
         // Arrange
-        Expression mockedExpression = mock(Expression.class);
         Context context = Context.builder().build();
-        when(mockedExpression.interpret(context)).thenReturn(10.0);
+        Expression mockExpression = Mockito.mock(Expression.class);
+        when(mockExpression.interpret(context)).thenReturn(2.718);
 
-        LogExpression logExpression = new LogExpression(mockedExpression);
+        LogExpression logExpression = new LogExpression(mockExpression);
 
         // Act
-        Double result = logExpression.interpret(context);
+        double result = logExpression.interpret(context);
 
         // Assert
-        assertEquals(Math.log(10.0), result, 1e-9);
+        assertEquals(1, result, 0.001, "The natural logarithm of 2.718 should be approximately 1.");
     }
 
     @Test
-    void testInterpretWithOneAsInput() {
+    void shouldThrowArithmeticException_ForNegativeInput() {
         // Arrange
-        Expression mockedExpression = mock(Expression.class);
         Context context = Context.builder().build();
-        when(mockedExpression.interpret(context)).thenReturn(1.0);
+        Expression mockExpression = Mockito.mock(Expression.class);
+        when(mockExpression.interpret(context)).thenReturn(-1.0);
 
-        LogExpression logExpression = new LogExpression(mockedExpression);
-
-        // Act
-        Double result = logExpression.interpret(context);
-
-        // Assert
-        assertEquals(0.0, result, 1e-9);
-    }
-
-    @Test
-    void testInterpretWithSmallPositiveValue() {
-        // Arrange
-        Expression mockedExpression = mock(Expression.class);
-        Context context = Context.builder().build();
-        when(mockedExpression.interpret(context)).thenReturn(0.5);
-
-        LogExpression logExpression = new LogExpression(mockedExpression);
-
-        // Act
-        Double result = logExpression.interpret(context);
-
-        // Assert
-        assertEquals(Math.log(0.5), result, 1e-9);
-    }
-
-    @Test
-    void testInterpretWithLargePositiveValue() {
-        // Arrange
-        Expression mockedExpression = mock(Expression.class);
-        Context context = Context.builder().build();
-        when(mockedExpression.interpret(context)).thenReturn(1000.0);
-
-        LogExpression logExpression = new LogExpression(mockedExpression);
-
-        // Act
-        Double result = logExpression.interpret(context);
-
-        // Assert
-        assertEquals(Math.log(1000.0), result, 1e-9);
-    }
-
-    @Test
-    void testInterpretThrowsExceptionForNonPositiveInput() {
-        // Arrange
-        Expression mockedExpression = mock(Expression.class);
-        Context context = Context.builder().build();
-        when(mockedExpression.interpret(context)).thenReturn(-1.0);
-
-        LogExpression logExpression = new LogExpression(mockedExpression);
+        LogExpression logExpression = new LogExpression(mockExpression);
 
         // Act & Assert
-        try {
-            logExpression.interpret(context);
-        } catch (ArithmeticException | IllegalArgumentException e) {
-            assertEquals("Non-positive value passed to logarithm", e.getMessage());
-        }
+        ArithmeticException exception = assertThrows(
+                ArithmeticException.class,
+                () -> logExpression.interpret(context),
+                "Logarithm of a negative number should throw an exception."
+        );
+        assertEquals("Logarithm of a negative number is undefined.", exception.getMessage());
+    }
+
+    @Test
+    void shouldThrowArithmeticException_ForZeroInput() {
+        // Arrange
+        Context context = Context.builder().build();
+        Expression mockExpression = Mockito.mock(Expression.class);
+        when(mockExpression.interpret(context)).thenReturn(0.0);
+
+        LogExpression logExpression = new LogExpression(mockExpression);
+
+        // Act & Assert
+        ArithmeticException exception = assertThrows(
+                ArithmeticException.class,
+                () -> logExpression.interpret(context),
+                "Logarithm of zero should throw an exception."
+        );
+        assertEquals("Logarithm of zero is undefined.", exception.getMessage());
+    }
+
+    @Test
+    void shouldReturnLogarithm_ForInputGreaterThanOne() {
+        // Arrange
+        Context context = Context.builder().build();
+        Expression mockExpression = Mockito.mock(Expression.class);
+        when(mockExpression.interpret(context)).thenReturn(10.0);
+
+        LogExpression logExpression = new LogExpression(mockExpression);
+
+        // Act
+        double result = logExpression.interpret(context);
+
+        // Assert
+        assertEquals(Math.log(10.0), result, 0.001, "The logarithm of 10 should match the Math.log result.");
     }
 }

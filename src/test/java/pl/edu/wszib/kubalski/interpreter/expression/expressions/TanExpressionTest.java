@@ -1,76 +1,71 @@
 package pl.edu.wszib.kubalski.interpreter.expression.expressions;
 
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import pl.edu.wszib.kubalski.interpreter.Context;
 import pl.edu.wszib.kubalski.interpreter.expression.Expression;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 class TanExpressionTest {
 
     /**
-     * This class tests the `interpret` method of the `TanExpression` class, which evaluates the tangent
-     * of the value obtained by interpreting the provided expression within the given context.
+     * Tests the `interpret` method of `TanExpression`.
+     * This method evaluates the tangent of the result of another `Expression`
+     * in the context provided.
      */
 
     @Test
-    void interpret_shouldReturnTangentOfExpressionValue() {
+    void shouldReturnValidResult_whenInnerExpressionIsValid() {
         // Arrange
         Context context = Context.builder().build();
-        Expression mockExpression = Mockito.mock(Expression.class);
-        Mockito.when(mockExpression.interpret(context)).thenReturn(Math.PI / 4); // π/4 is 45 degrees, tan(π/4) = 1
-        TanExpression tanExpression = new TanExpression(mockExpression);
+        Expression innerExpression = mock(Expression.class);
+        when(innerExpression.interpret(context)).thenReturn(Math.PI / 4); // tan(π/4) = 1
+        TanExpression tanExpression = new TanExpression(innerExpression);
 
         // Act
-        Double result = tanExpression.interpret(context);
+        double result = tanExpression.interpret(context);
 
         // Assert
         assertEquals(1.0, result, 0.0001);
     }
 
     @Test
-    void interpret_shouldHandleZeroValue() {
+    void shouldReturnZero_whenInnerExpressionEvaluatesToZero() {
         // Arrange
         Context context = Context.builder().build();
-        Expression mockExpression = Mockito.mock(Expression.class);
-        Mockito.when(mockExpression.interpret(context)).thenReturn(0.0); // tan(0) = 0
-        TanExpression tanExpression = new TanExpression(mockExpression);
+        Expression innerExpression = mock(Expression.class);
+        when(innerExpression.interpret(context)).thenReturn(0.0); // tan(0) = 0
+        TanExpression tanExpression = new TanExpression(innerExpression);
 
         // Act
-        Double result = tanExpression.interpret(context);
+        double result = tanExpression.interpret(context);
 
         // Assert
         assertEquals(0.0, result, 0.0001);
     }
 
     @Test
-    void interpret_shouldHandleNegativeValue() {
+    void shouldThrowArithmeticException_whenInnerExpressionCausesInfiniteResult() {
         // Arrange
         Context context = Context.builder().build();
-        Expression mockExpression = Mockito.mock(Expression.class);
-        Mockito.when(mockExpression.interpret(context)).thenReturn(-Math.PI / 4); // tan(-π/4) = -1
-        TanExpression tanExpression = new TanExpression(mockExpression);
+        Expression innerExpression = mock(Expression.class);
+        when(innerExpression.interpret(context)).thenReturn(Math.PI / 2);
+        TanExpression tanExpression = new TanExpression(innerExpression);
 
-        // Act
-        Double result = tanExpression.interpret(context);
-
-        // Assert
-        assertEquals(-1.0, result, 0.0001);
+        // Act & Assert
+        assertThrows(ArithmeticException.class, () -> tanExpression.interpret(context));
     }
 
     @Test
-    void interpret_shouldHandleNonTrivialValue() {
+    void shouldThrowArithmeticException_whenInnerExpressionEvaluatesToNaN() {
         // Arrange
         Context context = Context.builder().build();
-        Expression mockExpression = Mockito.mock(Expression.class);
-        Mockito.when(mockExpression.interpret(context)).thenReturn(Math.PI / 3); // tan(π/3) = √3
-        TanExpression tanExpression = new TanExpression(mockExpression);
+        Expression innerExpression = mock(Expression.class);
+        when(innerExpression.interpret(context)).thenReturn(Double.NaN); // Input as NaN
+        TanExpression tanExpression = new TanExpression(innerExpression);
 
-        // Act
-        Double result = tanExpression.interpret(context);
-
-        // Assert
-        assertEquals(Math.sqrt(3), result, 0.0001);
+        // Act & Assert
+        assertThrows(ArithmeticException.class, () -> tanExpression.interpret(context));
     }
 }

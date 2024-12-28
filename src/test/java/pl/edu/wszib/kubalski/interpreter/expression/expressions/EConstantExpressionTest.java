@@ -3,28 +3,26 @@ package pl.edu.wszib.kubalski.interpreter.expression.expressions;
 import org.junit.jupiter.api.Test;
 import pl.edu.wszib.kubalski.interpreter.Context;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 class EConstantExpressionTest {
 
     /**
-     * Tests for the EConstantExpression class.
-     * <p>
-     * The EConstantExpression class implements the Expression interface.
-     * Its interpret method is expected to return the mathematical constant e (~2.718).
-     * This test class ensures that the interpret method behaves as expected in various scenarios.
+     * This test class ensures the correctness of the {@link EConstantExpression#interpret(Context)} method.
+     * The method should consistently return the value of Math.E, representing Euler's number, regardless of the provided {@link Context}.
      */
 
     @Test
-    void interpret_ShouldReturnMathematicalConstantE() {
+    void testInterpretReturnsEulerConstant() {
         // Arrange
-        EConstantExpression eConstantExpression = new EConstantExpression();
         Context context = Context.builder().build();
+        EConstantExpression expression = new EConstantExpression();
 
         // Act
-        Double result = eConstantExpression.interpret(context);
+        Double result = expression.interpret(context);
 
         // Assert
-        assertEquals(Math.E, result, "The interpret method should return the constant Math.E");
+        assertNotNull(result, "Result should not be null");
+        assertEquals(Math.E, result, 1e-9, "The result should be equal to Math.E");
     }
 }

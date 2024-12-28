@@ -1,82 +1,52 @@
 package pl.edu.wszib.kubalski.interpreter.expression.expressions;
 
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
-
 import pl.edu.wszib.kubalski.interpreter.Context;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class NumberExpressionTest {
 
     /**
-     * The {@code NumberExpression} class is used to interpret a numeric string
-     * and convert it into a {@code Double} type.
-     * <p>
-     * The {@code interpret} method parses the numeric string value provided
-     * during object creation and returns it as a {@code Double}.
+     * This test class focuses on the `interpret` method of the `NumberExpression` class.
+     * The `interpret` method takes a `Context` object as input and parses the `value`
+     * field (provided during the instantiation of `NumberExpression`) into a `Double`.
      */
 
     @Test
-    void interpret_validIntegerInput_returnsCorrectDouble() {
+    void shouldInterpret_whenInputIsValidDecimalNumber() {
         // Arrange
-        String value = "42";
-        NumberExpression numberExpression = new NumberExpression(value);
+        String input = "42.5";
+        NumberExpression numberExpression = new NumberExpression(input);
         Context context = Context.builder().build();
 
         // Act
         Double result = numberExpression.interpret(context);
 
         // Assert
-        assertEquals(42.0, result);
+        assertEquals(42.5, result);
     }
 
     @Test
-    void interpret_validDecimalInput_returnsCorrectDouble() {
+    void shouldInterpret_whenInputIsValidIntegerNumber() {
         // Arrange
-        String value = "3.14";
-        NumberExpression numberExpression = new NumberExpression(value);
+        String input = "100";
+        NumberExpression numberExpression = new NumberExpression(input);
         Context context = Context.builder().build();
 
         // Act
         Double result = numberExpression.interpret(context);
 
         // Assert
-        assertEquals(3.14, result);
+        assertEquals(100.0, result);
     }
 
     @Test
-    void interpret_largeValidNumberInput_returnsCorrectDouble() {
+    void shouldThrowException_whenInputIsInvalidNumber() {
         // Arrange
-        String value = "123456789.12345";
-        NumberExpression numberExpression = new NumberExpression(value);
-        Context context = Context.builder().build();
-
-        // Act
-        Double result = numberExpression.interpret(context);
-
-        // Assert
-        assertEquals(123456789.12345, result);
-    }
-
-    @Test
-    void interpret_negativeNumberInput_returnsCorrectDouble() {
-        // Arrange
-        String value = "-42.5";
-        NumberExpression numberExpression = new NumberExpression(value);
-        Context context = Context.builder().build();
-
-        // Act
-        Double result = numberExpression.interpret(context);
-
-        // Assert
-        assertEquals(-42.5, result);
-    }
-
-    @Test
-    void interpret_invalidStringInput_throwsNumberFormatException() {
-        // Arrange
-        String value = "invalid";
-        NumberExpression numberExpression = new NumberExpression(value);
+        String input = "not-a-number";
+        NumberExpression numberExpression = new NumberExpression(input);
         Context context = Context.builder().build();
 
         // Act & Assert
@@ -84,8 +54,22 @@ class NumberExpressionTest {
     }
 
     @Test
-    void interpret_nullInput_throwsNullPointerException() {
-        // Act & Assert
+    void shouldThrowException_whenInputIsNull() {
+        // Assert
         assertThrows(NullPointerException.class, () -> new NumberExpression(null));
+    }
+
+    @Test
+    void shouldInterpret_whenInputIsNegativeNumber() {
+        // Arrange
+        String input = "-123.45";
+        NumberExpression numberExpression = new NumberExpression(input);
+        Context context = Context.builder().build();
+
+        // Act
+        Double result = numberExpression.interpret(context);
+
+        // Assert
+        assertEquals(-123.45, result);
     }
 }

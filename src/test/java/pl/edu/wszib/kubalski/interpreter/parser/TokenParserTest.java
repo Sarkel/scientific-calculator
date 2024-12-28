@@ -1,125 +1,162 @@
 package pl.edu.wszib.kubalski.interpreter.parser;
 
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import pl.edu.wszib.kubalski.interpreter.expression.Expression;
 import pl.edu.wszib.kubalski.interpreter.expression.factory.ExpressionFactory;
 import pl.edu.wszib.kubalski.interpreter.expression.factory.ExpressionFactoryHelper;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 class TokenParserTest {
 
     @Test
-    void shouldParseSimpleConstantExpression() {
-        List<String> tokens = List.of("42");
-        ExpressionFactory expressionFactory = mock(ExpressionFactory.class);
-        ExpressionFactoryHelper expressionFactoryHelper = mock(ExpressionFactoryHelper.class);
+    void shouldParseExpression_whenSimpleAddition() {
+        // Arrange
+        List<String> tokens = List.of("5", "+", "3");
+        ExpressionFactoryHelper factoryHelper = mock(ExpressionFactoryHelper.class);
+        ExpressionFactory factory = mock(ExpressionFactory.class);
 
-        when(expressionFactoryHelper.getConstantExpressions()).thenReturn(new String[]{});
-        when(expressionFactory.createExpression("42", null, null)).thenReturn(mock(Expression.class));
+        when(factoryHelper.getLowPriorityExpressions()).thenReturn(new String[]{"+"});
 
-        TokenParser tokenParser = new TokenParser(tokens, expressionFactoryHelper, expressionFactory);
+        when(factoryHelper.getFunctionalExpressions()).thenReturn(new String[]{});
+        when(factoryHelper.getConstantExpressions()).thenReturn(new String[]{});
+        when(factoryHelper.getUnaryExpressions()).thenReturn(new String[]{});
+        when(factoryHelper.getHighPriorityExpressions()).thenReturn(new String[]{});
 
-        Expression result = tokenParser.parse();
+        Expression operand1 = mock(Expression.class);
+        Expression operand2 = mock(Expression.class);
+        Expression result = mock(Expression.class);
 
-        assertNotNull(result);
-        verify(expressionFactory).createExpression("42", null, null);
+        when(factory.createExpression("5", null, null)).thenReturn(operand1);
+        when(factory.createExpression("3", null, null)).thenReturn(operand2);
+        when(factory.createExpression("+", operand1, operand2)).thenReturn(result);
+
+        TokenParser parser = new TokenParser(tokens, factoryHelper, factory);
+
+        // Act
+        Expression output = parser.parse();
+
+        // Assert
+        assertEquals(result, output);
+        verify(factory).createExpression("+", operand1, operand2);
     }
 
     @Test
-    void shouldParseUnaryExpression() {
-        List<String> tokens = List.of("-", "42");
-        ExpressionFactory expressionFactory = mock(ExpressionFactory.class);
-        ExpressionFactoryHelper expressionFactoryHelper = mock(ExpressionFactoryHelper.class);
+    void shouldParseExpression_whenNestedWithParentheses() {
+        // Arrange
+        List<String> tokens = List.of("(", "5", "+", "3", ")", "*", "2");
+        ExpressionFactoryHelper factoryHelper = mock(ExpressionFactoryHelper.class);
+        ExpressionFactory factory = mock(ExpressionFactory.class);
 
-        when(expressionFactoryHelper.getUnaryExpressions()).thenReturn(new String[]{"-"});
-        when(expressionFactoryHelper.getConstantExpressions()).thenReturn(new String[]{});
-        when(expressionFactory.createExpression("-", mock(Expression.class), null)).thenReturn(mock(Expression.class));
-        when(expressionFactory.createExpression("42", null, null)).thenReturn(mock(Expression.class));
+        when(factoryHelper.getLowPriorityExpressions()).thenReturn(new String[]{"+"});
+        when(factoryHelper.getHighPriorityExpressions()).thenReturn(new String[]{"*"});
 
-        TokenParser tokenParser = new TokenParser(tokens, expressionFactoryHelper, expressionFactory);
+        when(factoryHelper.getFunctionalExpressions()).thenReturn(new String[]{});
+        when(factoryHelper.getConstantExpressions()).thenReturn(new String[]{});
+        when(factoryHelper.getUnaryExpressions()).thenReturn(new String[]{});
 
-        Expression result = tokenParser.parse();
+        Expression innerOperand1 = mock(Expression.class);
+        Expression innerOperand2 = mock(Expression.class);
+        Expression innerResult = mock(Expression.class);
+        Expression outerOperand = mock(Expression.class);
+        Expression finalResult = mock(Expression.class);
 
-        assertNotNull(result);
-        verify(expressionFactory).createExpression("-", any(Expression.class), eq(null));
+        when(factory.createExpression("5", null, null)).thenReturn(innerOperand1);
+        when(factory.createExpression("3", null, null)).thenReturn(innerOperand2);
+        when(factory.createExpression("+", innerOperand1, innerOperand2)).thenReturn(innerResult);
+        when(factory.createExpression("2", null, null)).thenReturn(outerOperand);
+        when(factory.createExpression("*", innerResult, outerOperand)).thenReturn(finalResult);
+
+        TokenParser parser = new TokenParser(tokens, factoryHelper, factory);
+
+        // Act
+        Expression output = parser.parse();
+
+        // Assert
+        assertEquals(finalResult, output);
+        verify(factory).createExpression("+", innerOperand1, innerOperand2);
+        verify(factory).createExpression("*", innerResult, outerOperand);
     }
 
     @Test
-    void shouldParseSimpleAdditionExpression() {
-        List<String> tokens = List.of("42", "+", "58");
-        ExpressionFactory expressionFactory = mock(ExpressionFactory.class);
-        ExpressionFactoryHelper expressionFactoryHelper = mock(ExpressionFactoryHelper.class);
+    void shouldParseExpression_whenUnaryOperator() {
+        // Arrange
+        List<String> tokens = List.of("-", "5");
+        ExpressionFactoryHelper factoryHelper = mock(ExpressionFactoryHelper.class);
+        ExpressionFactory factory = mock(ExpressionFactory.class);
 
-        when(expressionFactoryHelper.getLowPriorityExpressions()).thenReturn(new String[]{"+"});
-        when(expressionFactoryHelper.getConstantExpressions()).thenReturn(new String[]{});
-        when(expressionFactory.createExpression("42", null, null)).thenReturn(mock(Expression.class));
-        when(expressionFactory.createExpression("58", null, null)).thenReturn(mock(Expression.class));
-        when(expressionFactory.createExpression("+", mock(Expression.class), mock(Expression.class)))
-                .thenReturn(mock(Expression.class));
+        when(factoryHelper.getUnaryExpressions()).thenReturn(new String[]{"-"});
 
-        TokenParser tokenParser = new TokenParser(tokens, expressionFactoryHelper, expressionFactory);
+        when(factoryHelper.getFunctionalExpressions()).thenReturn(new String[]{});
+        when(factoryHelper.getConstantExpressions()).thenReturn(new String[]{});
+        when(factoryHelper.getLowPriorityExpressions()).thenReturn(new String[]{});
+        when(factoryHelper.getHighPriorityExpressions()).thenReturn(new String[]{});
 
-        Expression result = tokenParser.parse();
+        Expression operand = mock(Expression.class);
+        Expression result = mock(Expression.class);
 
-        assertNotNull(result);
-        verify(expressionFactory).createExpression("+", any(Expression.class), any(Expression.class));
+        when(factory.createExpression("5", null, null)).thenReturn(operand);
+        when(factory.createExpression("-", operand, null)).thenReturn(result);
+
+        TokenParser parser = new TokenParser(tokens, factoryHelper, factory);
+
+        // Act
+        Expression output = parser.parse();
+
+        // Assert
+        assertEquals(result, output);
+        verify(factory).createExpression("-", operand, null);
     }
 
     @Test
-    void shouldParseParenthesizedExpression() {
-        List<String> tokens = List.of("(", "42", "+", "58", ")");
-        ExpressionFactory expressionFactory = mock(ExpressionFactory.class);
-        ExpressionFactoryHelper expressionFactoryHelper = mock(ExpressionFactoryHelper.class);
+    void shouldParseExpression_whenFunctionCall() {
+        // Arrange
+        List<String> tokens = List.of("sin", "(", "3.14", ")");
+        ExpressionFactoryHelper factoryHelper = mock(ExpressionFactoryHelper.class);
+        ExpressionFactory factory = mock(ExpressionFactory.class);
 
-        when(expressionFactoryHelper.getLowPriorityExpressions()).thenReturn(new String[]{"+"});
-        when(expressionFactoryHelper.getConstantExpressions()).thenReturn(new String[]{});
-        when(expressionFactory.createExpression("42", null, null)).thenReturn(mock(Expression.class));
-        when(expressionFactory.createExpression("58", null, null)).thenReturn(mock(Expression.class));
-        when(expressionFactory.createExpression("+", mock(Expression.class), mock(Expression.class)))
-                .thenReturn(mock(Expression.class));
+        when(factoryHelper.getFunctionalExpressions()).thenReturn(new String[]{"sin"});
+        when(factoryHelper.getConstantExpressions()).thenReturn(new String[]{});
+        when(factoryHelper.getUnaryExpressions()).thenReturn(new String[]{});
+        when(factoryHelper.getLowPriorityExpressions()).thenReturn(new String[]{});
+        when(factoryHelper.getHighPriorityExpressions()).thenReturn(new String[]{});
 
-        TokenParser tokenParser = new TokenParser(tokens, expressionFactoryHelper, expressionFactory);
+        Expression argument = mock(Expression.class);
+        Expression result = mock(Expression.class);
 
-        Expression result = tokenParser.parse();
+        when(factory.createExpression("3.14", null, null)).thenReturn(argument);
+        when(factory.createExpression("sin", argument, null)).thenReturn(result);
 
-        assertNotNull(result);
-        verify(expressionFactory).createExpression("+", any(Expression.class), any(Expression.class));
+        TokenParser parser = new TokenParser(tokens, factoryHelper, factory);
+
+        // Act
+        Expression output = parser.parse();
+
+        // Assert
+        assertEquals(result, output);
+        verify(factory).createExpression("sin", argument, null);
     }
 
     @Test
-    void shouldParseFunctionExpression() {
-        List<String> tokens = List.of("sqrt", "(", "25", ")");
-        ExpressionFactory expressionFactory = mock(ExpressionFactory.class);
-        ExpressionFactoryHelper expressionFactoryHelper = mock(ExpressionFactoryHelper.class);
-
-        when(expressionFactoryHelper.getFunctionalExpressions()).thenReturn(new String[]{"sqrt"});
-        when(expressionFactoryHelper.getConstantExpressions()).thenReturn(new String[]{});
-        when(expressionFactory.createExpression("25", null, null)).thenReturn(mock(Expression.class));
-        when(expressionFactory.createExpression("sqrt", mock(Expression.class), null))
-                .thenReturn(mock(Expression.class));
-
-        TokenParser tokenParser = new TokenParser(tokens, expressionFactoryHelper, expressionFactory);
-
-        Expression result = tokenParser.parse();
-
-        assertNotNull(result);
-        verify(expressionFactory).createExpression("sqrt", any(Expression.class), eq(null));
-    }
-
-    @Test
-    void shouldThrowWhenUnexpectedToken() {
+    void shouldThrowException_whenUnexpectedToken() {
+        // Arrange
         List<String> tokens = List.of("&");
-        ExpressionFactory expressionFactory = mock(ExpressionFactory.class);
-        ExpressionFactoryHelper expressionFactoryHelper = mock(ExpressionFactoryHelper.class);
+        ExpressionFactoryHelper factoryHelper = mock(ExpressionFactoryHelper.class);
+        ExpressionFactory factory = mock(ExpressionFactory.class);
 
-        TokenParser tokenParser = new TokenParser(tokens, expressionFactoryHelper, expressionFactory);
+        when(factoryHelper.getLowPriorityExpressions()).thenReturn(new String[]{});
+        when(factoryHelper.getHighPriorityExpressions()).thenReturn(new String[]{});
+        when(factoryHelper.getUnaryExpressions()).thenReturn(new String[]{});
+        when(factoryHelper.getFunctionalExpressions()).thenReturn(new String[]{});
+        when(factoryHelper.getConstantExpressions()).thenReturn(new String[]{});
 
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, tokenParser::parse);
-        assertEquals("Unexpected token: &", exception.getMessage());
+        TokenParser parser = new TokenParser(tokens, factoryHelper, factory);
+
+        // Act & Assert
+        assertThrows(IllegalArgumentException.class, parser::parse);
     }
 }

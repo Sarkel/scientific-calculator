@@ -4,65 +4,76 @@ import org.junit.jupiter.api.Test;
 import pl.edu.wszib.kubalski.interpreter.Context;
 import pl.edu.wszib.kubalski.interpreter.expression.Expression;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 class SqrtExpressionTest {
 
     /**
-     * Class under test: SqrtExpression
-     * <p>
-     * Description: SqrtExpression is an implementation of the Expression interface.
-     * It evaluates the square root of the value produced by another Expression.
-     * It uses the Math.sqrt() function for computation.
+     * SqrtExpression is a class that represents a square root operation applied
+     * on a nested expression. It evaluates the nested expression within the provided
+     * context and computes the square root of the result. If the nested expression
+     * evaluates to a negative value, an ArithmeticException is thrown.
      */
 
     @Test
-    void interpret_shouldReturnCorrectSquareRoot_whenExpressionEvaluatesToPositiveNumber() {
+    void shouldReturnSquareRoot_whenInputIsPositive() {
         // Arrange
-        Expression mockedExpression = mock(Expression.class);
         Context context = Context.builder().build();
-        when(mockedExpression.interpret(context)).thenReturn(16.0);
+        Expression nestedExpression = mock(Expression.class);
+        when(nestedExpression.interpret(context)).thenReturn(25.0);
 
-        SqrtExpression sqrtExpression = new SqrtExpression(mockedExpression);
+        SqrtExpression sqrtExpression = new SqrtExpression(nestedExpression);
 
         // Act
         Double result = sqrtExpression.interpret(context);
 
         // Assert
-        assertEquals(4.0, result, 0.00001);
+        assertEquals(5.0, result);
     }
 
     @Test
-    void interpret_shouldReturnZero_whenExpressionEvaluatesToZero() {
+    void shouldThrowArithmeticException_whenInputIsNegative() {
         // Arrange
-        Expression mockedExpression = mock(Expression.class);
         Context context = Context.builder().build();
-        when(mockedExpression.interpret(context)).thenReturn(0.0);
+        Expression nestedExpression = mock(Expression.class);
+        when(nestedExpression.interpret(context)).thenReturn(-1.0);
 
-        SqrtExpression sqrtExpression = new SqrtExpression(mockedExpression);
-
-        // Act
-        Double result = sqrtExpression.interpret(context);
-
-        // Assert
-        assertEquals(0.0, result, 0.00001);
-    }
-
-    @Test
-    void interpret_shouldThrowException_whenExpressionEvaluatesToNegativeNumber() {
-        // Arrange
-        Expression mockedExpression = mock(Expression.class);
-        Context context = Context.builder().build();
-        when(mockedExpression.interpret(context)).thenReturn(-4.0);
-
-        SqrtExpression sqrtExpression = new SqrtExpression(mockedExpression);
+        SqrtExpression sqrtExpression = new SqrtExpression(nestedExpression);
 
         // Act & Assert
-        assertThrows(ArithmeticException.class, () ->
-                sqrtExpression.interpret(context)
-        );
+        assertThrows(ArithmeticException.class, () -> sqrtExpression.interpret(context));
+    }
+
+    @Test
+    void shouldReturnZero_whenInputIsZero() {
+        // Arrange
+        Context context = Context.builder().build();
+        Expression nestedExpression = mock(Expression.class);
+        when(nestedExpression.interpret(context)).thenReturn(0.0);
+
+        SqrtExpression sqrtExpression = new SqrtExpression(nestedExpression);
+
+        // Act
+        Double result = sqrtExpression.interpret(context);
+
+        // Assert
+        assertEquals(0.0, result);
+    }
+
+    @Test
+    void shouldReturnSquareRoot_whenInputIsFractional() {
+        // Arrange
+        Context context = Context.builder().build();
+        Expression nestedExpression = mock(Expression.class);
+        when(nestedExpression.interpret(context)).thenReturn(0.25);
+
+        SqrtExpression sqrtExpression = new SqrtExpression(nestedExpression);
+
+        // Act
+        Double result = sqrtExpression.interpret(context);
+
+        // Assert
+        assertEquals(0.5, result);
     }
 }

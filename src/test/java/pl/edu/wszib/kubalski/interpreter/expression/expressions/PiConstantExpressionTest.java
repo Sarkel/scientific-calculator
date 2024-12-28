@@ -5,24 +5,25 @@ import pl.edu.wszib.kubalski.interpreter.Context;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class PiConstantExpressionTest {
+/**
+ * Test class for PiConstantExpression.
+ * <p>
+ * This class is responsible for testing the `interpret` method
+ * of the PiConstantExpression class, which returns the mathematical
+ * constant PI (3.141592653589793) when evaluated in any given context.
+ */
+public class PiConstantExpressionTest {
 
-    /**
-     * Test class for PiExpression, which represents a constant expression
-     * returning the mathematical constant π (pi).
-     * <p>
-     * Method being tested: interpret(Context context).
-     */
     @Test
-    void shouldReturnMathPIWhenInterpretIsCalled() {
+    void shouldReturnPi_whenInterpretIsCalled() {
         // Arrange
-        PiConstantExpression piExpression = new PiConstantExpression();
+        PiConstantExpression piConstantExpression = new PiConstantExpression();
         Context context = Context.builder().build();
 
         // Act
-        Double result = piExpression.interpret(context);
+        Double result = piConstantExpression.interpret(context);
 
         // Assert
-        assertEquals(Math.PI, result, "The interpret method should return the value of PI");
+        assertEquals(Math.PI, result, "The interpret method should return the value of Math.PI");
     }
 }

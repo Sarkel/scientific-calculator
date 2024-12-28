@@ -12,91 +12,98 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-class InterpreterTest {
+public class InterpreterTest {
+
+    /**
+     * Class: Interpreter
+     * Method: interpret(String expression)
+     * <p>
+     * Overview: The interpret method takes a mathematical or logical expression as input in String format, tokenizes it,
+     * parses the tokens to construct an expression tree, and evaluates the expression within a given context to return a result.
+     */
 
     @Test
-    void interpret_shouldReturnCorrectResult_whenExpressionIsValid() {
-        // Arrange
-        Context mockContext = mock(Context.class);
+    public void shouldInterpretSimpleExpression() {
+        Context context = Context.builder().build();
         Tokenizer mockTokenizer = mock(Tokenizer.class);
         TokenParserFactory mockTokenParserFactory = mock(TokenParserFactory.class);
         TokenParser mockTokenParser = mock(TokenParser.class);
         Expression mockExpression = mock(Expression.class);
 
-        String expression = "2 + 2";
-        List<String> tokens = List.of("2", "+", "2");
-        Double expectedResult = 4.0;
+        String inputExpression = "2 + 3";
+        List<String> tokens = List.of("2", "+", "3");
+        double expectedResult = 5.0;
 
-        when(mockTokenizer.tokenize(expression)).thenReturn(tokens);
+        when(mockTokenizer.tokenize(inputExpression)).thenReturn(tokens);
         when(mockTokenParserFactory.create(tokens)).thenReturn(mockTokenParser);
         when(mockTokenParser.parse()).thenReturn(mockExpression);
-        when(mockExpression.interpret(mockContext)).thenReturn(expectedResult);
+        when(mockExpression.interpret(context)).thenReturn(expectedResult);
 
-        Interpreter interpreter = new Interpreter(mockContext, mockTokenizer, mockTokenParserFactory);
+        Interpreter interpreter = new Interpreter(context, mockTokenizer, mockTokenParserFactory);
 
-        // Act
-        Double result = interpreter.interpret(expression);
+        double result = interpreter.interpret(inputExpression);
 
-        // Assert
-        assertEquals(expectedResult, result);
-        verify(mockTokenizer, times(1)).tokenize(expression);
-        verify(mockTokenParserFactory, times(1)).create(tokens);
-        verify(mockTokenParser, times(1)).parse();
-        verify(mockExpression, times(1)).interpret(mockContext);
+        assertEquals(expectedResult, result, 0.0001);
+
+        verify(mockTokenizer).tokenize(inputExpression);
+        verify(mockTokenParserFactory).create(tokens);
+        verify(mockTokenParser).parse();
+        verify(mockExpression).interpret(context);
     }
 
     @Test
-    void interpret_shouldHandleEmptyExpression() {
-        // Arrange
-        Context mockContext = mock(Context.class);
+    public void shouldInterpretComplexExpression() {
+        Context context = Context.builder().build();
         Tokenizer mockTokenizer = mock(Tokenizer.class);
         TokenParserFactory mockTokenParserFactory = mock(TokenParserFactory.class);
+        TokenParser mockTokenParser = mock(TokenParser.class);
+        Expression mockExpression = mock(Expression.class);
 
-        String expression = "";
-        List<String> tokens = List.of();
+        String inputExpression = "5 * (2 + 3)";
+        List<String> tokens = List.of("5", "*", "(", "2", "+", "3", ")");
+        double expectedResult = 25.0;
 
-        when(mockTokenizer.tokenize(expression)).thenReturn(tokens);
-        when(mockTokenParserFactory.create(tokens)).thenThrow(new IllegalArgumentException("Invalid token sequence"));
+        when(mockTokenizer.tokenize(inputExpression)).thenReturn(tokens);
+        when(mockTokenParserFactory.create(tokens)).thenReturn(mockTokenParser);
+        when(mockTokenParser.parse()).thenReturn(mockExpression);
+        when(mockExpression.interpret(context)).thenReturn(expectedResult);
 
-        Interpreter interpreter = new Interpreter(mockContext, mockTokenizer, mockTokenParserFactory);
+        Interpreter interpreter = new Interpreter(context, mockTokenizer, mockTokenParserFactory);
 
-        // Act & Assert
-        try {
-            interpreter.interpret(expression);
-        } catch (IllegalArgumentException e) {
-            assertEquals("Invalid token sequence", e.getMessage());
-        }
+        double result = interpreter.interpret(inputExpression);
 
-        verify(mockTokenizer, times(1)).tokenize(expression);
-        verify(mockTokenParserFactory, times(1)).create(tokens);
+        assertEquals(expectedResult, result, 0.0001);
+
+        verify(mockTokenizer).tokenize(inputExpression);
+        verify(mockTokenParserFactory).create(tokens);
+        verify(mockTokenParser).parse();
+        verify(mockExpression).interpret(context);
     }
 
     @Test
-    void interpret_shouldThrowException_whenParseFails() {
-        // Arrange
-        Context mockContext = mock(Context.class);
+    public void shouldHandleInvalidExpression() {
+        Context context = Context.builder().build();
         Tokenizer mockTokenizer = mock(Tokenizer.class);
         TokenParserFactory mockTokenParserFactory = mock(TokenParserFactory.class);
         TokenParser mockTokenParser = mock(TokenParser.class);
 
-        String expression = "invalid";
-        List<String> tokens = List.of("invalid");
+        String inputExpression = "invalid_expression";
+        List<String> tokens = List.of("invalid_expression");
 
-        when(mockTokenizer.tokenize(expression)).thenReturn(tokens);
+        when(mockTokenizer.tokenize(inputExpression)).thenReturn(tokens);
         when(mockTokenParserFactory.create(tokens)).thenReturn(mockTokenParser);
-        when(mockTokenParser.parse()).thenThrow(new IllegalArgumentException("Failed to parse tokens"));
+        when(mockTokenParser.parse()).thenThrow(new IllegalArgumentException("Invalid expression"));
 
-        Interpreter interpreter = new Interpreter(mockContext, mockTokenizer, mockTokenParserFactory);
+        Interpreter interpreter = new Interpreter(context, mockTokenizer, mockTokenParserFactory);
 
-        // Act & Assert
         try {
-            interpreter.interpret(expression);
+            interpreter.interpret(inputExpression);
         } catch (IllegalArgumentException e) {
-            assertEquals("Failed to parse tokens", e.getMessage());
+            assertEquals("Invalid expression", e.getMessage());
         }
 
-        verify(mockTokenizer, times(1)).tokenize(expression);
-        verify(mockTokenParserFactory, times(1)).create(tokens);
-        verify(mockTokenParser, times(1)).parse();
+        verify(mockTokenizer).tokenize(inputExpression);
+        verify(mockTokenParserFactory).create(tokens);
+        verify(mockTokenParser).parse();
     }
 }

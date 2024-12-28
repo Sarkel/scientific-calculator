@@ -8,7 +8,7 @@ public class CtanExpression implements Expression {
     @NonNull
     private final Expression expression;
 
-    public CtanExpression(@NonNull Expression expression) {
+    public CtanExpression(Expression expression) {
         this.expression = new TanExpression(expression);
     }
 
@@ -18,6 +18,6 @@ public class CtanExpression implements Expression {
         if (tanResult == 0) {
             throw new ArithmeticException("Division by zero");
         }
-        return 1 / tanResult;
+        return 1. / tanResult;
     }
 }

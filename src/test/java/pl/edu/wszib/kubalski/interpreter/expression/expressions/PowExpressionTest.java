@@ -10,24 +10,21 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class PowExpressionTest {
 
     /**
-     * PowExpression class represents a mathematical power operation between two expressions
-     * and interprets them based on a given context.
-     * <p>
-     * The interpret method calculates the power of the left expression's result raised
-     * to the right expression's result within the given context.
+     * Test class for PowExpression, which calculates the result
+     * of raising the result of one expression (base) to the power
+     * of another expression (exponent) using Math.pow.
      */
 
     @Test
-    void testInterpretWithPositiveExponents() {
+    void shouldCalculatePowerCorrectly_whenBaseIsPositiveAndExponentIsPositive() {
         // Arrange
         Context context = Context.builder().build();
-        Expression left = Mockito.mock(Expression.class);
-        Expression right = Mockito.mock(Expression.class);
+        Expression base = Mockito.mock(Expression.class);
+        Expression exponent = Mockito.mock(Expression.class);
+        Mockito.when(base.interpret(context)).thenReturn(2.0);
+        Mockito.when(exponent.interpret(context)).thenReturn(3.0);
 
-        Mockito.when(left.interpret(context)).thenReturn(2.0);
-        Mockito.when(right.interpret(context)).thenReturn(3.0);
-
-        PowExpression powExpression = new PowExpression(left, right);
+        PowExpression powExpression = new PowExpression(base, exponent);
 
         // Act
         Double result = powExpression.interpret(context);
@@ -37,54 +34,15 @@ class PowExpressionTest {
     }
 
     @Test
-    void testInterpretWithNegativeExponent() {
+    void shouldReturnZero_whenBaseIsZeroAndExponentIsPositive() {
         // Arrange
         Context context = Context.builder().build();
-        Expression left = Mockito.mock(Expression.class);
-        Expression right = Mockito.mock(Expression.class);
+        Expression base = Mockito.mock(Expression.class);
+        Expression exponent = Mockito.mock(Expression.class);
+        Mockito.when(base.interpret(context)).thenReturn(0.0);
+        Mockito.when(exponent.interpret(context)).thenReturn(3.0);
 
-        Mockito.when(left.interpret(context)).thenReturn(2.0);
-        Mockito.when(right.interpret(context)).thenReturn(-2.0);
-
-        PowExpression powExpression = new PowExpression(left, right);
-
-        // Act
-        Double result = powExpression.interpret(context);
-
-        // Assert
-        assertEquals(0.25, result);
-    }
-
-    @Test
-    void testInterpretWithZeroExponent() {
-        // Arrange
-        Context context = Context.builder().build();
-        Expression left = Mockito.mock(Expression.class);
-        Expression right = Mockito.mock(Expression.class);
-
-        Mockito.when(left.interpret(context)).thenReturn(5.0);
-        Mockito.when(right.interpret(context)).thenReturn(0.0);
-
-        PowExpression powExpression = new PowExpression(left, right);
-
-        // Act
-        Double result = powExpression.interpret(context);
-
-        // Assert
-        assertEquals(1.0, result);
-    }
-
-    @Test
-    void testInterpretWithZeroBaseAndNonZeroExponent() {
-        // Arrange
-        Context context = Context.builder().build();
-        Expression left = Mockito.mock(Expression.class);
-        Expression right = Mockito.mock(Expression.class);
-
-        Mockito.when(left.interpret(context)).thenReturn(0.0);
-        Mockito.when(right.interpret(context)).thenReturn(5.0);
-
-        PowExpression powExpression = new PowExpression(left, right);
+        PowExpression powExpression = new PowExpression(base, exponent);
 
         // Act
         Double result = powExpression.interpret(context);
@@ -94,21 +52,74 @@ class PowExpressionTest {
     }
 
     @Test
-    void testInterpretWithZeroBaseAndZeroExponent() {
+    void shouldReturnOne_whenBaseIsPositiveAndExponentIsZero() {
         // Arrange
         Context context = Context.builder().build();
-        Expression left = Mockito.mock(Expression.class);
-        Expression right = Mockito.mock(Expression.class);
+        Expression base = Mockito.mock(Expression.class);
+        Expression exponent = Mockito.mock(Expression.class);
+        Mockito.when(base.interpret(context)).thenReturn(5.0);
+        Mockito.when(exponent.interpret(context)).thenReturn(0.0);
 
-        Mockito.when(left.interpret(context)).thenReturn(0.0);
-        Mockito.when(right.interpret(context)).thenReturn(0.0);
-
-        PowExpression powExpression = new PowExpression(left, right);
+        PowExpression powExpression = new PowExpression(base, exponent);
 
         // Act
         Double result = powExpression.interpret(context);
 
         // Assert
-        assertEquals(1.0, result); // By convention, 0^0 is generally treated as 1 in mathematical operations.
+        assertEquals(1.0, result);
+    }
+
+    @Test
+    void shouldCalculatePowerCorrectly_whenBaseIsNegativeAndExponentIsPositive() {
+        // Arrange
+        Context context = Context.builder().build();
+        Expression base = Mockito.mock(Expression.class);
+        Expression exponent = Mockito.mock(Expression.class);
+        Mockito.when(base.interpret(context)).thenReturn(-2.0);
+        Mockito.when(exponent.interpret(context)).thenReturn(3.0);
+
+        PowExpression powExpression = new PowExpression(base, exponent);
+
+        // Act
+        Double result = powExpression.interpret(context);
+
+        // Assert
+        assertEquals(-8.0, result);
+    }
+
+    @Test
+    void shouldCalculatePowerCorrectly_whenBaseIsPositiveAndExponentIsNegative() {
+        // Arrange
+        Context context = Context.builder().build();
+        Expression base = Mockito.mock(Expression.class);
+        Expression exponent = Mockito.mock(Expression.class);
+        Mockito.when(base.interpret(context)).thenReturn(2.0);
+        Mockito.when(exponent.interpret(context)).thenReturn(-2.0);
+
+        PowExpression powExpression = new PowExpression(base, exponent);
+
+        // Act
+        Double result = powExpression.interpret(context);
+
+        // Assert
+        assertEquals(0.25, result);
+    }
+
+    @Test
+    void shouldReturnOne_whenBaseIsZeroAndExponentIsZero() {
+        // Arrange
+        Context context = Context.builder().build();
+        Expression base = Mockito.mock(Expression.class);
+        Expression exponent = Mockito.mock(Expression.class);
+        Mockito.when(base.interpret(context)).thenReturn(0.0);
+        Mockito.when(exponent.interpret(context)).thenReturn(0.0);
+
+        PowExpression powExpression = new PowExpression(base, exponent);
+
+        // Act
+        Double result = powExpression.interpret(context);
+
+        // Assert
+        assertEquals(1.0, result);
     }
 }

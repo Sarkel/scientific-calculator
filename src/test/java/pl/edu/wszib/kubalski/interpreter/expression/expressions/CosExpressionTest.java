@@ -10,71 +10,90 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class CosExpressionTest {
 
     /**
-     * This class tests the CosExpression class, specifically its interpret method.
-     * The interpret method calculates the cosine of the value returned by the inner expression's interpret method.
+     * Test class for the {@link CosExpression} class, specifically focusing on
+     * the {@code interpret(Context context)} method. This method computes the cosine
+     * of the interpreted result of the provided inner expression using the given context.
      */
 
     @Test
-    void interpret_shouldReturnCosineOfInnerExpressionResult() {
+    void shouldReturnOne_whenInterpretCalledWithZero() {
         // Arrange
-        Expression innerExpression = Mockito.mock(Expression.class);
-        Context dummyContext = Context.builder().build();
-        Mockito.when(innerExpression.interpret(dummyContext)).thenReturn(Math.PI / 3);
+        Expression mockedExpression = Mockito.mock(Expression.class);
+        Context context = Context.builder().build();
+        Mockito.when(mockedExpression.interpret(context)).thenReturn(0.0);
 
-        CosExpression cosExpression = new CosExpression(innerExpression);
+        CosExpression cosExpression = new CosExpression(mockedExpression);
 
         // Act
-        Double result = cosExpression.interpret(dummyContext);
+        Double result = cosExpression.interpret(context);
 
         // Assert
-        assertEquals(0.5, result, 0.00001);
+        assertEquals(1.0, result, 0.0001, "Cosine of 0 should be 1.0");
     }
 
     @Test
-    void interpret_shouldHandleZeroInput() {
+    void shouldReturnZero_whenInterpretCalledWithPiOverTwo() {
         // Arrange
-        Expression innerExpression = Mockito.mock(Expression.class);
-        Context dummyContext = Context.builder().build();
-        Mockito.when(innerExpression.interpret(dummyContext)).thenReturn(0.0);
+        Expression mockedExpression = Mockito.mock(Expression.class);
+        Context context = Context.builder().build();
+        Mockito.when(mockedExpression.interpret(context)).thenReturn(Math.PI / 2);
 
-        CosExpression cosExpression = new CosExpression(innerExpression);
+        CosExpression cosExpression = new CosExpression(mockedExpression);
 
         // Act
-        Double result = cosExpression.interpret(dummyContext);
+        Double result = cosExpression.interpret(context);
 
         // Assert
-        assertEquals(1.0, result, 0.00001);
+        assertEquals(0.0, result, 0.0001, "Cosine of π/2 should be approximately 0.0");
     }
 
     @Test
-    void interpret_shouldReturnNegativeCosineForInputBeyondPi() {
+    void shouldReturnMinusOne_whenInterpretCalledWithPi() {
         // Arrange
-        Expression innerExpression = Mockito.mock(Expression.class);
-        Context dummyContext = Context.builder().build();
-        Mockito.when(innerExpression.interpret(dummyContext)).thenReturn(3 * Math.PI / 2);
+        Expression mockedExpression = Mockito.mock(Expression.class);
+        Context context = Context.builder().build();
+        Mockito.when(mockedExpression.interpret(context)).thenReturn(Math.PI);
 
-        CosExpression cosExpression = new CosExpression(innerExpression);
+        CosExpression cosExpression = new CosExpression(mockedExpression);
 
         // Act
-        Double result = cosExpression.interpret(dummyContext);
+        Double result = cosExpression.interpret(context);
 
         // Assert
-        assertEquals(0.0, result, 0.00001);
+        assertEquals(-1.0, result, 0.0001, "Cosine of π should be -1.0");
     }
 
     @Test
-    void interpret_shouldHandleNegativeInputValues() {
+    void shouldReturnZero_whenInterpretCalledWithNegativePiOverTwo() {
         // Arrange
-        Expression innerExpression = Mockito.mock(Expression.class);
-        Context dummyContext = Context.builder().build();
-        Mockito.when(innerExpression.interpret(dummyContext)).thenReturn(-Math.PI / 2);
+        Expression mockedExpression = Mockito.mock(Expression.class);
+        Context context = Context.builder().build();
+        Mockito.when(mockedExpression.interpret(context)).thenReturn(-Math.PI / 2);
 
-        CosExpression cosExpression = new CosExpression(innerExpression);
+        CosExpression cosExpression = new CosExpression(mockedExpression);
 
         // Act
-        Double result = cosExpression.interpret(dummyContext);
+        Double result = cosExpression.interpret(context);
 
         // Assert
-        assertEquals(0.0, result, 0.00001);
+        assertEquals(0.0, result, 0.0001, "Cosine of -π/2 should be approximately 0.0");
+    }
+
+    @Test
+    void shouldReturnSqrtTwoOverTwo_whenInterpretCalledWithPiOverFour() {
+        // Arrange
+        Expression mockedExpression = Mockito.mock(Expression.class);
+        Context context = Context.builder().build();
+        double angle = Math.PI / 4; // 45 degrees
+        Mockito.when(mockedExpression.interpret(context)).thenReturn(angle);
+
+        CosExpression cosExpression = new CosExpression(mockedExpression);
+
+        // Act
+        Double result = cosExpression.interpret(context);
+
+        // Assert
+        assertEquals(Math.sqrt(2) / 2, result, 0.0001,
+                "Cosine of π/4 should be approximately sqrt(2)/2");
     }
 }

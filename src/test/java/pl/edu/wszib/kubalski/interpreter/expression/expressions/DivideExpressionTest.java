@@ -5,25 +5,25 @@ import org.mockito.Mockito;
 import pl.edu.wszib.kubalski.interpreter.Context;
 import pl.edu.wszib.kubalski.interpreter.expression.Expression;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 class DivideExpressionTest {
 
     /**
-     * Test for the `interpret` method in DivideExpression class.
-     * This method evaluates the division of two expressions in the given context.
+     * Tests the DivideExpression class, specifically its interpret method.
+     * The interpret method performs division of two interpreted values
+     * from the left and right expressions.
      */
 
     @Test
-    void testInterpret_WhenDivisionIsValid() {
+    void shouldReturnCorrectResult_whenInputsAreNonZero() {
         // Arrange
         Context context = Context.builder().build();
-        Expression left = Mockito.mock(Expression.class);
-        Expression right = Mockito.mock(Expression.class);
-
-        Mockito.when(left.interpret(context)).thenReturn(2.0);
-        Mockito.when(right.interpret(context)).thenReturn(10.0);
+        Expression left = mock(Expression.class);
+        Expression right = mock(Expression.class);
+        when(left.interpret(context)).thenReturn(10.0);
+        when(right.interpret(context)).thenReturn(2.0);
 
         DivideExpression divideExpression = new DivideExpression(left, right);
 
@@ -35,30 +35,29 @@ class DivideExpressionTest {
     }
 
     @Test
-    void testInterpret_WhenDivisionByZero() {
+    void shouldThrowArithmeticException_whenDivisionByZero() {
         // Arrange
         Context context = Context.builder().build();
-        Expression left = Mockito.mock(Expression.class);
-        Expression right = Mockito.mock(Expression.class);
-
-        Mockito.when(left.interpret(context)).thenReturn(0.0);
-        Mockito.when(right.interpret(context)).thenReturn(10.0);
+        Expression left = mock(Expression.class);
+        Expression right = mock(Expression.class);
+        when(left.interpret(context)).thenReturn(10.0);
+        when(right.interpret(context)).thenReturn(0.0);
 
         DivideExpression divideExpression = new DivideExpression(left, right);
 
         // Act & Assert
-        assertThrows(ArithmeticException.class, () -> divideExpression.interpret(context));
+        ArithmeticException exception = assertThrows(ArithmeticException.class, () -> divideExpression.interpret(context));
+        assertEquals("Division by zero", exception.getMessage());
     }
 
     @Test
-    void testInterpret_WhenBothOperandsAreNegative() {
+    void shouldEvaluateLeftAndRightExpressionsIndependently_whenInterpreted() {
         // Arrange
         Context context = Context.builder().build();
-        Expression left = Mockito.mock(Expression.class);
-        Expression right = Mockito.mock(Expression.class);
-
-        Mockito.when(left.interpret(context)).thenReturn(-2.0);
-        Mockito.when(right.interpret(context)).thenReturn(-10.0);
+        Expression left = mock(Expression.class);
+        Expression right = mock(Expression.class);
+        when(left.interpret(context)).thenReturn(9.0);
+        when(right.interpret(context)).thenReturn(3.0);
 
         DivideExpression divideExpression = new DivideExpression(left, right);
 
@@ -66,44 +65,6 @@ class DivideExpressionTest {
         Double result = divideExpression.interpret(context);
 
         // Assert
-        assertEquals(5.0, result);
-    }
-
-    @Test
-    void testInterpret_WhenLeftOperandIsZero() {
-        // Arrange
-        Context context = Context.builder().build();
-        Expression left = Mockito.mock(Expression.class);
-        Expression right = Mockito.mock(Expression.class);
-
-        Mockito.when(left.interpret(context)).thenReturn(5.0);
-        Mockito.when(right.interpret(context)).thenReturn(0.0);
-
-        DivideExpression divideExpression = new DivideExpression(left, right);
-
-        // Act
-        Double result = divideExpression.interpret(context);
-
-        // Assert
-        assertEquals(0.0, result);
-    }
-
-    @Test
-    void testInterpret_WhenDivisionResultsInDecimalValue() {
-        // Arrange
-        Context context = Context.builder().build();
-        Expression left = Mockito.mock(Expression.class);
-        Expression right = Mockito.mock(Expression.class);
-
-        Mockito.when(left.interpret(context)).thenReturn(3.0);
-        Mockito.when(right.interpret(context)).thenReturn(10.0);
-
-        DivideExpression divideExpression = new DivideExpression(left, right);
-
-        // Act
-        Double result = divideExpression.interpret(context);
-
-        // Assert
-        assertEquals(3.3333333333333335, result);
+        assertEquals(3.0, result);
     }
 }

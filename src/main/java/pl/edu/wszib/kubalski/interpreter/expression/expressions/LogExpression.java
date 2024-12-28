@@ -32,6 +32,13 @@ public class LogExpression implements Expression {
 
     @Override
     public Double interpret(Context context) {
-        return Math.log(expression.interpret(context));
+        Double result = expression.interpret(context);
+        if (result < 0) {
+            throw new ArithmeticException("Logarithm of a negative number is undefined.");
+        }
+        if (result == 0) {
+            throw new ArithmeticException("Logarithm of zero is undefined.");
+        }
+        return Math.log(result);
     }
 }
