@@ -50,7 +50,7 @@ class TanExpressionTest {
         // Arrange
         Context context = Context.builder().build();
         Expression innerExpression = mock(Expression.class);
-        when(innerExpression.interpret(context)).thenReturn(Math.PI / 2);
+        when(innerExpression.interpret(context)).thenReturn(Double.POSITIVE_INFINITY);
         TanExpression tanExpression = new TanExpression(innerExpression);
 
         // Act & Assert
